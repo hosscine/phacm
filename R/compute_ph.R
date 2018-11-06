@@ -10,10 +10,12 @@
 #' @export
 #'
 #' @examples
-calcPhom <- function(X, maxdimension, maxscale, plot = T, ret = F){
-  diagram <<- TDA::ripsDiag(X,maxdimension = maxdimension,maxscale = maxscale,printProgress = T)
-  if(plot) showPersistentDiagram(diagram)
-  if(ret) return(diagram)
+calcPhom <- function(X, maxdimension, maxscale, plot = T, ret = F) {
+  diagram <<- TDA::ripsDiag(X, maxdimension = maxdimension, maxscale = maxscale, printProgress = T)
+  if (plot) 
+    showPersistentDiagram(diagram)
+  if (ret) 
+    return(diagram)
 }
 
 #' Title
@@ -29,8 +31,8 @@ calcPhom <- function(X, maxdimension, maxscale, plot = T, ret = F){
 #' @export
 #'
 #' @examples
-calcSubsamplePhom <- function(X, maxdimension, maxscale, rate = 0.5, plot = T, ret = F){
+calcSubsamplePhom <- function(X, maxdimension, maxscale, rate = 0.5, plot = T, ret = F) {
   assertthat::assert_that(assertthat::is.number(rate) && rate <= 1 && rate >= 0)
-  subX <- X[sample(nrow(X),nrow(X)*rate),]
+  subX <- X[sample(nrow(X), nrow(X) * rate), ]
   calcPhom(subX, maxdimension, maxscale, plot, ret)
 }
