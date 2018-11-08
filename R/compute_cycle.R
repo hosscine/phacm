@@ -85,12 +85,8 @@ plot.smoothPhom <- function(x, ...) x <- show.hole.density(x$peak)
 #' @export
 #'
 #' @examples
-countPeakPD <- function(PD, dimension, thresh = 0, spar = seq(0, 1, 0.1), plot = F, ...) {
-  PD <- rawPD(PD)
-  scale <- attr(PD, "scale")
-  tseq <- seq(min(scale), max(scale), length.out = 500)
-  PL <- TDA::landscape(PD, dimension = dimension, tseq = tseq)
-
+countSmoothLocalMaximalPD <- function(PD, dimension, thresh = 0, spar = seq(0, 1, 0.1), plot = F, ...) {
+  PL <- computePL(PD, dimension = dimension)
   estimate <- countPeakPL(PL, spar, thresh, plot, ...)
   return(estimate)
 }
@@ -108,11 +104,11 @@ countPeakPD <- function(PD, dimension, thresh = 0, spar = seq(0, 1, 0.1), plot =
 #' @export
 #'
 #' @examples
-countPeakPL <- function(PL, thresh = 0, spar = seq(0, 1, 0.1), plot = F, ...) {
+countSmoothLocalMaximalPL <- function(PL, thresh = 0, spar = seq(0, 1, 0.1), plot = F, ...) {
   smPL.list <- lapply(spar, function(sp)
     stats::smooth.spline(x = 1:length(PL), y = PL, spar = sp))
 
-  estimate <- smPL.list %>% sapply(count.local.maximal, thresh) %>% mean
+  estimate <- smPL.list %>% sapply(countLocalMaximal, thresh) %>% mean
   if (!plot) return(estimate)
 
   # if plot == ture then
@@ -142,22 +138,11 @@ countPeakPL <- function(PL, thresh = 0, spar = seq(0, 1, 0.1), plot = F, ...) {
 #' @export
 #'
 #' @examples
-count.local.maximal <- function(x, thresh = max(x)/4, weakcut = T, show.thresh = F) {
-  if (class(x) == "smooth.spline")
-    x <- x$y
-  if (thresh == 0)
-    thresh <- max(x)/4
-  peak <- 0
-  d <- diff(x)
-  thresh <- thresh * weakcut
-  for (i in 1:(length(x) - 2)) {
-    if (d[i] >= 0 && d[i + 1] < 0 && x[i] > thresh) {
-      peak <- peak + 1
-    }
-  }
-  if (show.thresh)
-    print(paste("thresh", thresh))
-  return(peak)
+countLocalMaximalPL <- function(PL, thresh = 0) {
+  if (class(PL) == "smooth.spline") PL <- PL$y
+  PL[PL < thresh] <- 0
+  lmax <- PL %>%  diff %>% sign %>% diff %>% magrittr::equals(-2) %>% sum
+  return(lmax)
 }
 
 # ??<U+383C><U+3E34>次??<U+383C><U+3E33>??<U+383C><U+3E65>?<U+383C><U+3E31>?peak数??<U+383C><U+3E63>?<U+383C><U+3E38>???<U+393C><U+3E32>??<U+383C><U+3E36>度推定し<U+653C><U+3E66>??表示する??<U+383C><U+3E32>

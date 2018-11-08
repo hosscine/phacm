@@ -51,5 +51,6 @@ computePL <- function(PD, dimension) {
   scale <- attr(PD, "scale")
   tseq <- seq(min(scale), max(scale), length.out = 500)
   PL <- TDA::landscape(PD, dimension = dimension, tseq = tseq)
+  class(PL) <- "PL"
   return(PL)
 }
