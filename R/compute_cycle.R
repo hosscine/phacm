@@ -12,7 +12,7 @@
 #' @examples
 bootstrap.homology <- function(X, maxdim, maxscale, const.band = 0, maximum.thresh = F) {
   # require(pracma)
-  if (!("bootsSamples" %in% class(X))) 
+  if (!("bootsSamples" %in% class(X)))
     stop("input must be bootsSamples")
   peak <- matrix(0, maxdim, length(X))
   # band <- ifelse(const.band > 0,const.band,hausdInterval(X, m=sample.size, B=times, alpha =
@@ -20,20 +20,20 @@ bootstrap.homology <- function(X, maxdim, maxscale, const.band = 0, maximum.thre
   tseq <- seq(0, maxscale, length.out = 1000)
   diags <- lapply(X, function(x) calcPhom(x, maxdim, maxscale, ret = T, plot = F))
   print(sapply(diags, function(diag) calcDiagCentroid(diag)[3]))
-  band <- ifelse(const.band == 0, max(sapply(diags, function(diag) calcDiagCentroid(diag)[3])), 
-    const.band)
+  band <- ifelse(const.band == 0, max(sapply(diags, function(diag) calcDiagCentroid(diag)[3])),
+                 const.band)
   print(band)
-  
+
   for (t in 1:length(X)) {
-    land <- lapply(1:maxdim, function(d) TDA::landscape(diags[[t]][[1]], dimension = d, KK = 1, 
-      tseq = tseq))
-    if (maximum.thresh) 
+    land <- lapply(1:maxdim, function(d) TDA::landscape(diags[[t]][[1]], dimension = d, KK = 1,
+                                                        tseq = tseq))
+    if (maximum.thresh)
       band <- max(sapply(land, max))/4
     for (d in 1:maxdim) {
-      peak[d, t] <- calc.landscape.peak(X = land[[d]], thresh = (band/(2 * d)), tseq = tseq)
+      peak[d, t] <- countPeaksPL(X = land[[d]], thresh = (band/(2 * d)), tseq = tseq)
     }
   }
-  
+
   dimnames(peak) <- list(paste0("dim", 1:maxdim), paste0("sample", 1:length(X)))
   bootstrap.summary <- list(peak = peak)
   bootstrap.summary <- append(bootstrap.summary, c(band = band, show.hole.density(peak)))
@@ -50,7 +50,7 @@ bootstrap.homology <- function(X, maxdim, maxscale, const.band = 0, maximum.thre
 #'
 #' @examples
 calcDiagCentroid <- function(diag = diagram) {
-  if (class(diag) == "list") 
+  if (class(diag) == "list")
     diag <- diag[[1]]
   diag <- diag[-which(diag[, 1] == 0), ]
   centroid <- apply(diag[, 2:3], 2, mean)
@@ -71,50 +71,66 @@ calcDiagCentroid <- function(diag = diagram) {
 #' @examples
 plot.smoothPhom <- function(x, ...) x <- show.hole.density(x$peak)
 
-# 平滑化して平??<U+383C><U+3E37>�<U+393C><U+3E34>?<U+383C><U+3E33>?ク数を数える。ダイアグラ�<U+393C><U+3E63>?<U+3E30>直入力可??<U+383C><U+3E32>
+# 平滑化して平??<U+383C><U+3E37>??<U+393C><U+3E34>?<U+383C><U+3E33>?ク数を数える。ダイアグラ??<U+393C><U+3E63>?<U+3E30>直入力可??<U+383C><U+3E32>
 #' Title
 #'
-#' @param X
+#' @param PD
 #' @param dimension
-#' @param spar
 #' @param thresh
-#' @param tseq
-#' @param show
+#' @param spar
+#' @param plot
+#' @param ...
 #'
 #' @return
 #' @export
 #'
 #' @examples
-calc.landscape.peak <- function(X = diagram, dimension = 1, spar = seq(0, 1, 0.1), thresh = 0, tseq = tseq, 
-  show = F) {
-  if (class(X) == "list") {
-    X <- X[["diagram"]]
-    tseq <- seq(0, attr(X, "scale")[2], length.out = 1000)
-    X <- TDA::landscape(X, dimension = dimension, 1, tseq)
-  } else if (missing(tseq)) 
-    tseq <- 1:length(X)
-  
-  smoothed.land <- lapply(spar, function(sp) {
-    stats::smooth.spline(x = tseq, y = X, spar = sp)
-  })
-  if (show) {
-    lapply(1:length(spar), function(i) {
-      if (i == 1) 
-        plot(tseq, smoothed.land[[i]]$y, type = "l", col = rainbow(length(spar))[i], ylim = c(0, 
-          max(X)), xlab = "(Birth + Death) / 2", ylab = "(Death - Birth) / 2") else plot(tseq, smoothed.land[[i]]$y, type = "l", col = rainbow(length(spar))[i], ann = F, 
-        axes = F, ylim = c(0, max(X)))
-      par(new = T)
-    })
-    abline(thresh, 0, col = 2)
-  }
-  # for single showing if(show) lapply(1:length(spar),function(i)
-  # plot(tseq,smoothed.land[[i]]$y,type = 'l',col=1,ann = F,ylim = c(0,max(X))))
-  par(new = F)
-  return(mean(sapply(smoothed.land, count.local.maximal, T, thresh)))
+countPeakPD <- function(PD, dimension, thresh = 0, spar = seq(0, 1, 0.1), plot = F, ...) {
+  PD <- rawPD(PD)
+  scale <- attr(PD, "scale")
+  tseq <- seq(min(scale), max(scale), length.out = 500)
+  PL <- TDA::landscape(PD, dimension = dimension, tseq = tseq)
+
+  estimate <- countPeakPL(PL, spar, thresh, plot, ...)
+  return(estimate)
+}
+
+#' Title
+#'
+#' @param PL
+#' @param dimension
+#' @param thresh
+#' @param spar
+#' @param plot
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+countPeakPL <- function(PL, thresh = 0, spar = seq(0, 1, 0.1), plot = F, ...) {
+  smPL.list <- lapply(spar, function(sp)
+    stats::smooth.spline(x = 1:length(PL), y = PL, spar = sp))
+
+  estimate <- smPL.list %>% sapply(count.local.maximal, thresh) %>% mean
+  if (!plot) return(estimate)
+
+  # if plot == ture then
+  elp <- myfs::overwriteEllipsis(..., x = 0, type = "n", ylim = c(0, max(PD)))
+  elp <- myfs::softwriteEllipsis(..., append = elp,
+                                 xlab = "(Birth + Death) / 2",
+                                 ylab = "(Death - Birth) / 2")
+  do.call(graphics::plot, elp)
+  graphics::abline(thresh, 0, col = 2)
+  col <- smPL.list %>% length %>% grDevices::rainbow
+  for (i in 1:length(smPL.list))
+    graphics::lines(smPL.list[[i]]$y, col = col[i])
+
+  return(estimate)
 }
 
 
-# 1次関数の�<U+393C><U+3E34>?<U+383C><U+3E33>?ク数を数える Internal Function
+# 1次関数の??<U+393C><U+3E34>?<U+383C><U+3E33>?ク数を数える Internal Function
 #' Title
 #'
 #' @param x
@@ -126,10 +142,10 @@ calc.landscape.peak <- function(X = diagram, dimension = 1, spar = seq(0, 1, 0.1
 #' @export
 #'
 #' @examples
-count.local.maximal <- function(x, weakcut = T, thresh = max(x)/4, show.thresh = F) {
-  if (class(x) == "smooth.spline") 
+count.local.maximal <- function(x, thresh = max(x)/4, weakcut = T, show.thresh = F) {
+  if (class(x) == "smooth.spline")
     x <- x$y
-  if (thresh == 0) 
+  if (thresh == 0)
     thresh <- max(x)/4
   peak <- 0
   d <- diff(x)
@@ -139,12 +155,12 @@ count.local.maximal <- function(x, weakcut = T, thresh = max(x)/4, show.thresh =
       peak <- peak + 1
     }
   }
-  if (show.thresh) 
+  if (show.thresh)
     print(paste("thresh", thresh))
   return(peak)
 }
 
-# ??<U+383C><U+3E34>次??<U+383C><U+3E33>�<U+383C><U+3E65>?<U+383C><U+3E31>?peak数�<U+383C><U+3E63>?<U+383C><U+3E38>?�<U+393C><U+3E32>??<U+383C><U+3E36>度推定し<U+653C><U+3E66>??表示する??<U+383C><U+3E32>
+# ??<U+383C><U+3E34>次??<U+383C><U+3E33>??<U+383C><U+3E65>?<U+383C><U+3E31>?peak数??<U+383C><U+3E63>?<U+383C><U+3E38>???<U+393C><U+3E32>??<U+383C><U+3E36>度推定し<U+653C><U+3E66>??表示する??<U+383C><U+3E32>
 # Internal FUnction
 #' Title
 #'
@@ -166,8 +182,8 @@ show.hole.density <- function(X) {
     dhole <- dens[[d]][["x"]][which.max(dens[[d]][["y"]])]
     par(new = T)
     plot(dens[[d]], xlim = xlim, ylim = ylim, col = d + 1, ann = F, axes = F)
-    print(paste0("dimension ", d, ", ", round(mhole, digits = 2), " mean hole, ", round(dhole), 
-      " density hole"))
+    print(paste0("dimension ", d, ", ", round(mhole, digits = 2), " mean hole, ", round(dhole),
+                 " density hole"))
     bootstrap.summary[[paste0("dim", d, "mhole")]] <- mhole
     bootstrap.summary[[paste0("dim", d, "dhole")]] <- dhole
   }
