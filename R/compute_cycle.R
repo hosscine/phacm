@@ -87,7 +87,7 @@ plot.smoothPhom <- function(x, ...) x <- show.hole.density(x$peak)
 #' @examples
 countSmoothLocalMaximalPD <- function(PD, dimension, thresh = 0, spar = seq(0, 1, 0.1), plot = F, ...) {
   PL <- computePL(PD, dimension = dimension)
-  estimate <- countPeakPL(PL, spar, thresh, plot, ...)
+  estimate <- countSmoothLocalMaximalPL(PL, thresh, spar, plot, ...)
   return(estimate)
 }
 
@@ -100,25 +100,31 @@ countSmoothLocalMaximalPD <- function(PD, dimension, thresh = 0, spar = seq(0, 1
 #' @param plot
 #' @param ...
 #'
+#' @importFrom magrittr %>%
+#' @importFrom assertthat assert_that
+#'
 #' @return
 #' @export
 #'
 #' @examples
-countSmoothLocalMaximalPL <- function(PL, thresh = 0, spar = seq(0, 1, 0.1), plot = F, ...) {
+countSmoothLocalMaximalPL <- function(PL, thresh = max(PL)/4, spar = seq(0, 1, 0.1), plot = F, ...) {
   smPL.list <- lapply(spar, function(sp)
     stats::smooth.spline(x = 1:length(PL), y = PL, spar = sp))
 
-  estimate <- smPL.list %>% sapply(countLocalMaximal, thresh) %>% mean
+  estimate <- smPL.list %>% sapply(countLocalMaximalPL, thresh) %>% mean
   if (!plot) return(estimate)
 
   # if plot == ture then
-  elp <- myfs::overwriteEllipsis(..., x = 0, type = "n", ylim = c(0, max(PD)))
+  elp <- myfs::overwriteEllipsis(..., x = 0,
+                                 type = "n",
+                                 xlim = c(0, PL %>% length),
+                                 ylim = c(0, PL %>% max))
   elp <- myfs::softwriteEllipsis(..., append = elp,
                                  xlab = "(Birth + Death) / 2",
                                  ylab = "(Death - Birth) / 2")
   do.call(graphics::plot, elp)
   graphics::abline(thresh, 0, col = 2)
-  col <- smPL.list %>% length %>% grDevices::rainbow
+  col <- smPL.list %>% length %>% grDevices::rainbow()
   for (i in 1:length(smPL.list))
     graphics::lines(smPL.list[[i]]$y, col = col[i])
 
@@ -139,6 +145,7 @@ countSmoothLocalMaximalPL <- function(PL, thresh = 0, spar = seq(0, 1, 0.1), plo
 #'
 #' @examples
 countLocalMaximalPL <- function(PL, thresh = 0) {
+  assert_that(assertthat::is.scalar(thresh))
   if (class(PL) == "smooth.spline") PL <- PL$y
   PL[PL < thresh] <- 0
   lmax <- PL %>%  diff %>% sign %>% diff %>% magrittr::equals(-2) %>% sum

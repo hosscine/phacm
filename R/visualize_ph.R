@@ -22,7 +22,7 @@ rawPD <- function(PD) {
 #'
 #' @examples
 showPersistentDiagram <- function(diag = diagram, maxdimention = NA, scale = NA, point = 1.5) {
-  diag <- rawdiag(diag)
+  diag <- rawPD(diag)
   if (missing(maxdimention))
     maxdimention <- attr(diag, "maxdimension")
   if (missing(scale))
