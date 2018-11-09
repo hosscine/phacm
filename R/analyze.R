@@ -11,11 +11,11 @@
 upperCycles <- function(band, diag = diagram, ignore.0 = F) {
   diag <- rawPD(diag)
   pdiag <- calcPersistence(diag)
-  if (ignore.0)
+  if (ignore.0) 
     pdiag <- pdiag[pdiag[, "dimension"] != 0, ]
   upperdiag <- pdiag[pdiag[, "Persistence"] >= band, ]
   uppercycle <- upperdiag[order(upperdiag[, "Persistence"], decreasing = T), ]
-  if (nrow(uppercycle) == 0)
+  if (nrow(uppercycle) == 0) 
     warning("there is no upper cycle") else return(uppercycle)
 }
 

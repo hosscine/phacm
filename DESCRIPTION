@@ -17,5 +17,6 @@ Imports:
     grDevices,
     tidyr,
     tibble,
+    stringr,
     setter
 RoxygenNote: 6.1.0

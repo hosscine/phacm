@@ -6,9 +6,11 @@
 #' @export
 #'
 #' @examples
-rawPD <- function(PD) {
-  if (class(PD) == "list") return(PD$diagram)
-  return(PD)
+rawPD <- function(pd) {
+  if (class(pd) == "list")
+    pd <- pd$diagram
+  class(pd) <- "PD"
+  return(pd)
 }
 
 
@@ -21,10 +23,10 @@ rawPD <- function(PD) {
 #' @export
 #'
 #' @examples
-finitePD <- function(PD, replace = 10 ** 10) {
-  PD <- rawPD(PD)
-  PD[PD == Inf] <- replace
-  return(PD)
+finitePD <- function(pd, replace = attr(pd, "scale")[2]) {
+  pd <- rawPD(pd)
+  pd[pd == Inf] <- replace
+  return(pd)
 }
 
 #' Title
@@ -35,8 +37,7 @@ finitePD <- function(PD, replace = 10 ** 10) {
 #' @export
 #'
 #' @examples
-tidyPD <- function(PD) {
-  PD %>% rawPD %>% setter::set_class("matrix") %>% tibble::as.tibble() %>%
-    tibble::rowid_to_column("id") %>%
+tidyPD <- function(pd) {
+  pd %>% rawPD %>% setter::set_class("matrix") %>% tibble::as.tibble() %>% tibble::rowid_to_column("id") %>%
     tidyr::gather(time, value, -id, -dimension)
 }
