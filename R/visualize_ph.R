@@ -1,17 +1,5 @@
 #' Title
 #'
-#' @param PD
-#'
-#' @return
-#'
-#' @examples
-rawPD <- function(PD) {
-  if (class(PD) == "list") return(PD$diagram)
-  else return(PD)
-}
-
-#' Title
-#'
 #' @param diag
 #' @param maxdimention
 #' @param scale
@@ -57,7 +45,7 @@ showPersistentDiagram <- function(diag = diagram, maxdimention = NA, scale = NA,
 #'
 #' @examples
 showPhomBand <- function(diag = diagram, band) {
-  diag <- rawdiag(diag)
+  diag <- rawPD(diag)
   max.scale <- attr(diag, "scale")[2]
 
   graphics::plot(1, type = "n", ylim = c(0, max.scale), xlim = c(0, max.scale), ann = F, axes = F)

@@ -85,8 +85,9 @@ plot.smoothPhom <- function(x, ...) x <- show.hole.density(x$peak)
 #' @export
 #'
 #' @examples
-countSmoothLocalMaximalPD <- function(PD, dimension, thresh = 0, spar = seq(0, 1, 0.1), plot = F, ...) {
+countSmoothLocalMaximalPD <- function(PD, dimension, thresh = NULL, spar = seq(0, 1, 0.1), plot = F, ...) {
   PL <- computePL(PD, dimension = dimension)
+  if (is.null(thresh)) thresh <- max(PL)/4
   estimate <- countSmoothLocalMaximalPL(PL, thresh, spar, plot, ...)
   return(estimate)
 }
@@ -114,7 +115,7 @@ countSmoothLocalMaximalPL <- function(PL, thresh = max(PL)/4, spar = seq(0, 1, 0
   estimate <- smPL.list %>% sapply(countLocalMaximalPL, thresh) %>% mean
   if (!plot) return(estimate)
 
-  # if plot == ture then
+  # if plot == true then
   elp <- myfs::overwriteEllipsis(..., x = 0,
                                  type = "n",
                                  xlim = c(0, PL %>% length),

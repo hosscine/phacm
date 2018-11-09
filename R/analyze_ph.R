@@ -9,7 +9,7 @@
 #'
 #' @examples
 upperCycles <- function(band, diag = diagram, ignore.0 = F) {
-  diag <- rawdiag(diag)
+  diag <- rawPD(diag)
   pdiag <- calcPersistence(diag)
   if (ignore.0)
     pdiag <- pdiag[pdiag[, "dimension"] != 0, ]
@@ -28,7 +28,7 @@ upperCycles <- function(band, diag = diagram, ignore.0 = F) {
 #'
 #' @examples
 calcPersistence <- function(diag = diagram) {
-  diag <- rawdiag(diag)
+  diag <- rawPD(diag)
   diag. <- cbind(diag, diag[, "Death"] - diag[, "Birth"])
   colnames(diag.) <- c(colnames(diag), "Persistence")
   return(diag.)

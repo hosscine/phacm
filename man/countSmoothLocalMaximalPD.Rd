@@ -4,8 +4,8 @@
 \alias{countSmoothLocalMaximalPD}
 \title{Title}
 \usage{
-countSmoothLocalMaximalPD(PD, dimension, thresh = 0, spar = seq(0, 1,
-  0.1), plot = F, ...)
+countSmoothLocalMaximalPD(PD, dimension, thresh = NULL, spar = seq(0,
+  1, 0.1), plot = F, ...)
 }
 \arguments{
 \item{...}{}

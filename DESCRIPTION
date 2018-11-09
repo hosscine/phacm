@@ -14,5 +14,8 @@ Imports:
     assertthat,
     graphics,
     stats,
-    grDevices
+    grDevices,
+    tidyr,
+    tibble,
+    setter
 RoxygenNote: 6.1.0

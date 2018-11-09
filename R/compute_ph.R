@@ -54,17 +54,3 @@ computePL <- function(PD, dimension) {
   class(PL) <- "PL"
   return(PL)
 }
-
-#' Title
-#'
-#' @param PD
-#' @param replace
-#'
-#' @return
-#' @export
-#'
-#' @examples
-finitePD <- function(PD, replace = 10 ** 19) {
-  PD[PD == Inf] <- replace
-  return(PD)
-}
