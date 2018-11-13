@@ -6,13 +6,16 @@
 #' @param const.band
 #' @param maximum.thresh
 #'
+#' @importFrom magrittr %>%
+#' @importFrom assertthat assert_that
+#'
 #' @return
 #' @export
 #'
 #' @examples
 bootstrap.homology <- function(X, maxdim, maxscale, const.band = 0, maximum.thresh = F) {
   # require(pracma)
-  if (!("bootsSamples" %in% class(X))) 
+  if (!("bootsSamples" %in% class(X)))
     stop("input must be bootsSamples")
   peak <- matrix(0, maxdim, length(X))
   # band <- ifelse(const.band > 0,const.band,hausdInterval(X, m=sample.size, B=times, alpha =
@@ -20,20 +23,20 @@ bootstrap.homology <- function(X, maxdim, maxscale, const.band = 0, maximum.thre
   tseq <- seq(0, maxscale, length.out = 1000)
   diags <- lapply(X, function(x) calcPhom(x, maxdim, maxscale, ret = T, plot = F))
   print(sapply(diags, function(diag) calcDiagCentroid(diag)[3]))
-  band <- ifelse(const.band == 0, max(sapply(diags, function(diag) calcDiagCentroid(diag)[3])), 
+  band <- ifelse(const.band == 0, max(sapply(diags, function(diag) calcDiagCentroid(diag)[3])),
     const.band)
   print(band)
-  
+
   for (t in 1:length(X)) {
-    land <- lapply(1:maxdim, function(d) TDA::landscape(diags[[t]][[1]], dimension = d, KK = 1, 
+    land <- lapply(1:maxdim, function(d) TDA::landscape(diags[[t]][[1]], dimension = d, KK = 1,
       tseq = tseq))
-    if (maximum.thresh) 
+    if (maximum.thresh)
       band <- max(sapply(land, max))/4
     for (d in 1:maxdim) {
       peak[d, t] <- countPeaksPL(X = land[[d]], thresh = (band/(2 * d)), tseq = tseq)
     }
   }
-  
+
   dimnames(peak) <- list(paste0("dim", 1:maxdim), paste0("sample", 1:length(X)))
   bootstrap.summary <- list(peak = peak)
   bootstrap.summary <- append(bootstrap.summary, c(band = band, show.hole.density(peak)))
@@ -50,7 +53,7 @@ bootstrap.homology <- function(X, maxdim, maxscale, const.band = 0, maximum.thre
 #'
 #' @examples
 calcDiagCentroid <- function(diag = diagram) {
-  if (class(diag) == "list") 
+  if (class(diag) == "list")
     diag <- diag[[1]]
   diag <- diag[-which(diag[, 1] == 0), ]
   centroid <- apply(diag[, 2:3], 2, mean)
@@ -85,10 +88,10 @@ plot.smoothPhom <- function(x, ...) x <- show.hole.density(x$peak)
 #' @export
 #'
 #' @examples
-countSmoothLocalMaximalPD <- function(pd, dimension, thresh = NULL, spar = seq(0, 1, 0.1), plot = F, 
+countSmoothLocalMaximalPD <- function(pd, dimension, thresh = NULL, spar = seq(0, 1, 0.1), plot = F,
   ...) {
   PL <- computePL(pd, dimension = dimension)
-  if (is.null(thresh)) 
+  if (is.null(thresh))
     thresh <- max(PL)/4
   estimate <- countSmoothLocalMaximalPL(PL, thresh, spar, plot, ...)
   return(estimate)
@@ -103,29 +106,26 @@ countSmoothLocalMaximalPD <- function(pd, dimension, thresh = NULL, spar = seq(0
 #' @param plot
 #' @param ...
 #'
-#' @importFrom magrittr %>%
-#' @importFrom assertthat assert_that
-#'
 #' @return
 #' @export
 #'
 #' @examples
 countSmoothLocalMaximalPL <- function(pl, thresh = max(pl)/4, spar = seq(0, 1, 0.1), plot = F, ...) {
   smPL.list <- lapply(spar, function(sp) stats::smooth.spline(x = 1:length(pl), y = pl, spar = sp))
-  
+
   estimate <- smPL.list %>% sapply(countLocalMaximalPL, thresh) %>% mean
-  if (!plot) 
+  if (!plot)
     return(estimate)
-  
+
   # if plot == true then
-  elp <- myfs::overwriteEllipsis(..., x = 0, type = "n", xlim = c(0, pl %>% length), ylim = c(0, 
+  elp <- myfs::overwriteEllipsis(..., x = 0, type = "n", xlim = c(0, pl %>% length), ylim = c(0,
     pl %>% max))
   elp <- myfs::softwriteEllipsis(..., append = elp, xlab = "(Birth + Death) / 2", ylab = "(Death - Birth) / 2")
   do.call(graphics::plot, elp)
   graphics::abline(thresh, 0, col = 2)
   col <- smPL.list %>% length %>% grDevices::rainbow()
   for (i in 1:length(smPL.list)) graphics::lines(smPL.list[[i]]$y, col = col[i])
-  
+
   return(estimate)
 }
 
@@ -144,7 +144,7 @@ countSmoothLocalMaximalPL <- function(pl, thresh = max(pl)/4, spar = seq(0, 1, 0
 #' @examples
 countLocalMaximalPL <- function(pl, thresh = 0) {
   assert_that(assertthat::is.scalar(thresh))
-  if (class(pl) == "smooth.spline") 
+  if (class(pl) == "smooth.spline")
     pl <- pl$y
   pl[pl < thresh] <- 0
   lmax <- pl %>% diff %>% sign %>% diff %>% magrittr::equals(-2) %>% sum
@@ -173,7 +173,7 @@ show.hole.density <- function(X) {
     dhole <- dens[[d]][["x"]][which.max(dens[[d]][["y"]])]
     par(new = T)
     plot(dens[[d]], xlim = xlim, ylim = ylim, col = d + 1, ann = F, axes = F)
-    print(paste0("dimension ", d, ", ", round(mhole, digits = 2), " mean hole, ", round(dhole), 
+    print(paste0("dimension ", d, ", ", round(mhole, digits = 2), " mean hole, ", round(dhole),
       " density hole"))
     bootstrap.summary[[paste0("dim", d, "mhole")]] <- mhole
     bootstrap.summary[[paste0("dim", d, "dhole")]] <- dhole

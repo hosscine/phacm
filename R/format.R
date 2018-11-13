@@ -9,7 +9,7 @@
 rawPD <- function(pd) {
   if (class(pd) == "list")
     pd <- pd$diagram
-  class(pd) <- "PD"
+  class(pd) <- "diagram"
   return(pd)
 }
 

@@ -4,7 +4,7 @@
 \alias{finitePD}
 \title{Title}
 \usage{
-finitePD(pd, replace = 10^10)
+finitePD(pd, replace = attr(pd, "scale")[2])
 }
 \arguments{
 \item{replace}{}

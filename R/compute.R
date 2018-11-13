@@ -12,7 +12,7 @@
 #' @examples
 computePD <- function(X, maxdimension, maxscale) {
   pd <- TDA::ripsDiag(X, maxdimension = maxdimension, maxscale = maxscale)$diagram
-  class(pd) <- "pd"
+  class(pd) <- "diagram"
   diagram <<- pd
   return(pd)
 }
@@ -31,7 +31,7 @@ computePL <- function(pd, dimension) {
   scale <- attr(pd, "scale")
   tseq <- seq(min(scale), max(scale), length.out = 500)
   pl <- TDA::landscape(pd, dimension = dimension, tseq = tseq)
-  class(pl) <- "PL"
+  class(pl) <- "landscape"
   return(pl)
 }
 
