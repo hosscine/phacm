@@ -2,13 +2,18 @@
 % Please edit documentation in R/format.R
 \name{rawPD}
 \alias{rawPD}
-\title{Title}
+\title{Format persistent diagram}
 \usage{
 rawPD(pd)
 }
 \arguments{
-\item{PD}{}
+\item{pd}{persistent diagram.}
+}
+\value{
+extracted persistent diagram.
 }
 \description{
-Title
+Extracts persistent diagram from bad behavier object computed by `TDA`` packagee.
+The object is frequently a list contains diagram.
+So you need to extract diagram by this function to handle diagram.
 }

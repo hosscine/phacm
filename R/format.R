@@ -1,15 +1,18 @@
-#' Title
+#' Format persistent diagram
 #'
-#' @param PD
+#' Extracts persistent diagram from bad behavier object computed by `TDA`` packagee.
+#' The object is frequently a list contains diagram.
+#' So you need to extract diagram by this function to handle diagram.
 #'
-#' @return
-#' @export
+#' @param pd persistent diagram.
 #'
-#' @examples
+#' @return extracted persistent diagram.
+#'
 rawPD <- function(pd) {
   if (class(pd) == "list")
     pd <- pd$diagram
-  class(pd) <- "diagram"
+  else if (class(pd) != "diagram")
+    stop("cannot extract persistent diagram from input")
   return(pd)
 }
 

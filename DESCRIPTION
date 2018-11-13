@@ -21,5 +21,5 @@ Imports:
     stringr,
     setter
 Remotes: hosscine/myfs
-Remotes: hosscine/myfs
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
+Roxygen: list(markdown = TRUE)

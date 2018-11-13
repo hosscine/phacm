@@ -7,7 +7,7 @@
 \method{print}{diagram}(x, ...)
 }
 \arguments{
-\item{PD}{}
+\item{...}{}
 }
 \description{
 Title

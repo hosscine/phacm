@@ -6,9 +6,6 @@
 #' @param const.band
 #' @param maximum.thresh
 #'
-#' @importFrom magrittr %>%
-#' @importFrom assertthat assert_that
-#'
 #' @return
 #' @export
 #'

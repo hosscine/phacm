@@ -1,14 +1,11 @@
-#' Title
+#' Plot persistent diagram.
 #'
-#' @param diag
-#' @param maxdimention
-#' @param scale
-#' @param point
+#' Plot diagram like \code{phom} package.
 #'
-#' @return
+#' @param x persistent diagram.
+#'
 #' @export
 #'
-#' @examples
 plot.diagram <- function(x, ...) {
   pd <- finitePD(x)
   maxdimention <- attr(pd, "maxdimension") + 1
@@ -31,7 +28,8 @@ plot.diagram <- function(x, ...) {
 
 #' Title
 #'
-#' @param PD
+#' @param x
+#' @param ...
 #'
 #' @return
 #' @export

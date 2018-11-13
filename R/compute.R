@@ -1,16 +1,30 @@
-#' Title
+#' Compute persistent diagram from point cloud.
 #'
-#' @param X
-#' @param maxdimension
-#' @param maxscale
-#' @param plot
-#' @param ret
+#' Uses [TDA::ripsDiag()] to compute persistent diagram.
+#' Then keeps diagram to avoid to recomputing.
+#' The keeped diagram can be took out by [lastPD()].
 #'
-#' @return
+#' @param X target data.
+#' @param maxdimension max dimension to compute.
+#'   Lower value makes computatin time to short.
+#'   In case of computing on the general computer,
+#'   `maxdimension = 1`` is recomended firstly to avoid freeze your computer.
+#' @param maxscale max scale to compute.
+#' @param plot if `TRUE`, plot diagram.
+#'
+#' @return persistent diagram.
+#' @family compute persistent homology.
+#' @seealso [TDA::ripsDiag()], [lastPD()]
 #' @export
 #'
 #' @examples
-computePD <- function(X, maxdimension, maxscale) {
+#' library(TDA)
+#'
+#' circle <- circleUnif(100)
+#' circle.diag <- computePD(circle, maxdimension = 1, maxscale = 1)
+#' # you can see plotted persistent diagram.
+#'
+computePD <- function(X, maxdimension, maxscale, plot = TRUE) {
   pd <- TDA::ripsDiag(X, maxdimension = maxdimension, maxscale = maxscale)$diagram
   class(pd) <- "diagram"
   diagram <<- pd

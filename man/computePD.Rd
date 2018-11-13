@@ -2,13 +2,39 @@
 % Please edit documentation in R/compute.R
 \name{computePD}
 \alias{computePD}
-\title{Title}
+\title{Compute persistent diagram from point cloud.}
 \usage{
-computePD(X, maxdimension, maxscale)
+computePD(X, maxdimension, maxscale, plot = TRUE)
 }
 \arguments{
-\item{ret}{}
+\item{X}{target data.}
+
+\item{maxdimension}{max dimension to compute.
+Lower value makes computatin time to short.
+In case of computing on the general computer,
+`maxdimension = 1`` is recomended firstly to avoid freeze your computer.}
+
+\item{maxscale}{max scale to compute.}
+
+\item{plot}{if \code{TRUE}, plot diagram.}
+}
+\value{
+persistent diagram.
 }
 \description{
-Title
+Uses \code{\link[TDA:ripsDiag]{TDA::ripsDiag()}} to compute persistent diagram.
+Then keeps diagram to avoid to recomputing.
+The keeped diagram can be took out by \code{\link[=lastPD]{lastPD()}}.
 }
+\examples{
+library(TDA)
+
+circle <- circleUnif(100)
+circle.diag <- computePD(circle, maxdimension = 1, maxscale = 1)
+# you can see plotted persistent diagram.
+
+}
+\seealso{
+\code{\link[TDA:ripsDiag]{TDA::ripsDiag()}}, \code{\link[=lastPD]{lastPD()}}
+}
+\concept{compute persistent homology.}

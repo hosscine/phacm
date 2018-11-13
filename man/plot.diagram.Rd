@@ -2,13 +2,13 @@
 % Please edit documentation in R/visualize.R
 \name{plot.diagram}
 \alias{plot.diagram}
-\title{Title}
+\title{Plot persistent diagram.}
 \usage{
 \method{plot}{diagram}(x, ...)
 }
 \arguments{
-\item{point}{}
+\item{x}{persistent diagram.}
 }
 \description{
-Title
+Plot diagram like \code{phom} package.
 }
