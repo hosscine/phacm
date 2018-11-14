@@ -35,6 +35,17 @@ as_pd <- function(x) {
 #' @export
 is_pd <- function(x) inherits(x, "pd") & is.recursive(x)
 
+as_diagram <- function(pd) {
+  if (inherits(pd, "diagram")) return(pd)
+  else if (!is_pd(pd))
+    stop("can not convert to the diagram from", class(pd), "object")
+  pd %>%
+    as.matrix %>%
+    setter::copy_attributes(pd, c("maxdimension", "scale")) %>%
+    setter::set_class("diagram") %>%
+    setter::set_colnames(c("dimension", "Birth", "Death"))
+}
+
 #' Replace `Inf` value to finite value for `pd`
 #'
 #' @param pd `pd` object.
@@ -56,8 +67,8 @@ finite_pd <- function(pd, replace = attr(pd, "scale")[2]) {
 tidy_pd <- function(x) {
   x %<>% extract_diagram
   tibble::tibble(dim = x[, "dimension"] %>% as.integer,
-                      birth = x[, "Birth"],
-                      death = x[, "Death"]) %>%
-  setter::copy_attributes(x, c("maxdimension", "scale")) %>%
-  setter::set_class(c("pd", "data.frame"))
+                 birth = x[, "Birth"],
+                 death = x[, "Death"]) %>%
+    setter::copy_attributes(x, c("maxdimension", "scale")) %>%
+    setter::set_class(c("pd", "data.frame"))
 }

@@ -10,15 +10,16 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
-    magrittr,
     TDA,
-    assertthat,
     graphics,
-    stats,
     grDevices,
+    stats,
+    magrittr,
     dplyr,
     tibble,
+    purrr,
     stringr,
+    assertthat,
     setter
 Remotes: hosscine/myfs
 RoxygenNote: 6.1.1

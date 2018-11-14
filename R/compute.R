@@ -23,8 +23,7 @@
 #' circle.diag <- computePD(circle, maxdimension = 1, maxscale = 1)
 #' # you can see plotted persistent diagram.
 computePD <- function(X, maxdimension, maxscale, plot = TRUE) {
-  pd <- TDA::ripsDiag(X, maxdimension = maxdimension, maxscale = maxscale) %>%
-    extract_diagram %>% tidy_pd
+  pd <- TDA::ripsDiag(X, maxdimension = maxdimension, maxscale = maxscale) %>% as_pd
   setLastPD(pd)
   return(pd)
 }
