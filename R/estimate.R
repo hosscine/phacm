@@ -124,28 +124,6 @@ countSmoothLocalMaximalPL <- function(pl, thresh = max(pl)/4, spar = seq(0, 1, 0
   return(estimate)
 }
 
-
-# 1次関数の??<U+393C><U+3E34>?<U+383C><U+3E33>?ク数を数える Internal Function
-#' Title
-#'
-#' @param x
-#' @param weakcut
-#' @param thresh
-#' @param show.thresh
-#'
-#' @return
-#' @export
-#'
-#' @examples
-countLocalMaximalPL <- function(pl, thresh = 0) {
-  assert_that(assertthat::is.scalar(thresh))
-  if (class(pl) == "smooth.spline")
-    pl <- pl$y
-  pl[pl < thresh] <- 0
-  lmax <- pl %>% diff %>% sign %>% diff %>% magrittr::equals(-2) %>% sum
-  return(lmax)
-}
-
 # ??<U+383C><U+3E34>次??<U+383C><U+3E33>??<U+383C><U+3E65>?<U+383C><U+3E31>?peak数??<U+383C><U+3E63>?<U+383C><U+3E38>???<U+393C><U+3E32>??<U+383C><U+3E36>度推定し<U+653C><U+3E66>??表示する??<U+383C><U+3E32>
 # Internal FUnction
 #' Title

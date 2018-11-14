@@ -52,6 +52,10 @@ print.pd <- function(x, ...) {
   print(x)
 }
 
+print.pl <- function(x, ...) {
+
+}
+
 #' Title
 #'
 #' @param diag

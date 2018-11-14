@@ -54,12 +54,15 @@ compute_pd <- function(X, maxdimension, maxscale, plot = TRUE) {
 compute_pl <- function(pd) {
   pd %<>% extract_diagram %>% as_diagram
   dimension <- 1:attr(pd, "maxdimension")
+  dimnames <- paste0("d", dimension)
   scale <- attr(pd, "scale")
   tseq <- seq(min(scale), max(scale), length.out = 500)
   purrr::map(dimension, ~ TDA::landscape(pd, dimension = ., tseq = tseq)) %>%
-    setter::set_names(paste0("d", dimension)) %>%
-    setter::set_class("pl") %>%
-    magrittr::inset2("pd", pd)
+    setter::set_names(dimnames) %>%
+    setter::set_class(c("pl")) %>%
+    magrittr::inset2("pd", pd) %>%
+    magrittr::inset2("tseq", tseq) %>%
+    magrittr::inset2("dimnames", dimnames)
 }
 
 #' Title

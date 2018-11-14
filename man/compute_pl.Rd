@@ -32,3 +32,6 @@ anulus.pd <- computePD(anulus, 1, 1)
 anulus.pl <- computePL(anulus.pd)
 plot(anulus.pl)
 }
+\seealso{
+\link{compute_pd}, \code{\link[TDA:landscape]{TDA::landscape()}}
+}
