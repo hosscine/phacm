@@ -1,48 +1,47 @@
-#' Plot persistent diagram.
+#' Plot persistent diagram
 #'
 #' Plot diagram like `phom` package.
 #'
 #' @param x persistent diagram.
 #' @param scale limitation of birth and death.
-#' @param ... additional graphical arguments, see [plot], [plot.default] and [par].
+#' @param size size of plot text.
+#' @param legend.size size of legend text.
+#' @param ... additional graphical arguments,
+#'   see [plot()], [plot.default()] and [par()].
+#' @seealso [plot()]
 #' @export
-plot.pd <- function(x, scale = attr(rawPD(pd), "scale"), ...) {
-  pd <- finitePD(x)
+plot.pd <- function(x, scale = attr(x, "scale"), size = 1.5, legend.size = 1.5, ...) {
+  pd <- finite_pd(x)
   maxdimention <- attr(pd, "maxdimension") + 1
   assert_that(myfs::is.range(scale))
 
-  elp <- myfs::overwriteEllipsis(..., x = pd$Birth, y = pd$Death)
+  elp <- myfs::overwriteEllipsis(...,
+                                 x = pd$birth, y = pd$death,
+                                 col = pd$dim + 1,
+                                 pch = pd$dim + 1)
   elp <- myfs::softwriteEllipsis(..., append = elp,
                                  xlab = "Birth", ylab = "Death",
                                  xlim = scale, ylim = scale,
-                                 col = pd$dimension + 1,
-                                 pch = pd$dimension + 1)
+                                 cex = size, cex.axis = size,
+                                 cex.lab = size, cex.main = size)
   do.call(graphics::plot, elp)
   graphics::abline(0, 1)
 
-  # graphics::plot(pd[, 2], pd[, 3], xlim = scale, ylim = scale, cex = point, cex.axis = point,
-                 # col = pd[, 1] + 1, pch = pd[, 1] + 1, xlab = "Birth", ylab = "Death", cex.lab = 1.5, cex.main = 2)
-
-  legends <- 0
-  for (i in (0:(maxdimention - 1))) {
-    # legends <- c(legends,bquote(H[.(i)]))
-    legends <- c(legends, paste("dim", i))
-  }
-  legends <- legends[-1]
-
-  graphics::legend(scale[2]/2 * 1.2, scale[2]/2, legend = sapply(legends, as.expression), col = 1:maxdimention,
-                   pch = 1:maxdimention, cex = point, pt.cex = point)
+  legends <- paste("dim", 1:maxdimention - 1)
+  graphics::legend(x = scale[2]/2 * 1.2, y = scale[2]/2,
+                   legend = legends,
+                   col = 1:maxdimention, pch = 1:maxdimention,
+                   cex = legend.size, pt.cex = legend.size)
 }
 
 
-#' Title
+#' Print persistent diagram
 #'
-#' @param x
-#' @param ...
+#' Prints `pd` object like `tibble`.
 #'
-#' @return
+#' @param x `pd` object.
+#' @param ... additional arguments affecting the summary produced.
 #' @export
-#'
 #' @examples
 print.pd <- function(x, ...) {
   info <- paste0("Persistent Diagram [", nrow(x), "]")

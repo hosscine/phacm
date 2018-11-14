@@ -35,24 +35,21 @@ as_pd <- function(x) {
 #' @export
 is_pd <- function(x) inherits(x, "pd") & is.recursive(x)
 
-#' Title
+#' Replace `Inf` value to finite value for `pd`
 #'
-#' @param PD
-#' @param replace
-#'
-#' @return
+#' @param pd `pd` object.
+#' @param replace the value to replace `Inf`
+#' @return `pd` object not including `Inf`.
 #' @export
-#'
-#' @examples
-finitePD <- function(pd, replace = attr(pd, "scale")[2]) {
-  pd <- rawPD(pd)
+finite_pd <- function(pd, replace = attr(pd, "scale")[2]) {
+  assert_that(is_pd(pd))
   pd[pd == Inf] <- replace
   return(pd)
 }
 
 #' Convert the `diagram` object to `pd` object that inherits `tibble`
 #'
-#' @param x `diagram`.
+#' @param x `diagram` object.
 #' @return `pd` object.
 #' @export
 #' @seealso [tibble::tibble]

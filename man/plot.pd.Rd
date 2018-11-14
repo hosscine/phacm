@@ -2,17 +2,26 @@
 % Please edit documentation in R/visualize.R
 \name{plot.pd}
 \alias{plot.pd}
-\title{Plot persistent diagram.}
+\title{Plot persistent diagram}
 \usage{
-\method{plot}{pd}(x, scale = attr(rawPD(pd), "scale"), ...)
+\method{plot}{pd}(x, scale = attr(x, "scale"), size = 1.5,
+  legend.size = 1.5, ...)
 }
 \arguments{
 \item{x}{persistent diagram.}
 
 \item{scale}{limitation of birth and death.}
 
-\item{...}{additional graphical arguments, see \link{plot}, \link{plot.default} and \link{par}.}
+\item{size}{size of plot text.}
+
+\item{legend.size}{size of legend text.}
+
+\item{...}{additional graphical arguments,
+see \code{\link[=plot]{plot()}}, \code{\link[=plot.default]{plot.default()}} and \code{\link[=par]{par()}}.}
 }
 \description{
 Plot diagram like \code{phom} package.
+}
+\seealso{
+\code{\link[=plot]{plot()}}
 }

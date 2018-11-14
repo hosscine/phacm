@@ -7,7 +7,7 @@
 tidy_pd(x)
 }
 \arguments{
-\item{x}{\code{diagram}.}
+\item{x}{\code{diagram} object.}
 }
 \value{
 \code{pd} object.

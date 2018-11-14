@@ -2,13 +2,13 @@
 % Please edit documentation in R/visualize.R
 \name{print.pd}
 \alias{print.pd}
-\title{Title}
+\title{Print persistent diagram}
 \usage{
-\method{print}{pd}(x, ...)
+\method{print}{pd}(x)
 }
 \arguments{
-\item{...}{}
+\item{x}{\code{pd} object.}
 }
 \description{
-Title
+Prints \code{pd} object like \code{tibble}.
 }
