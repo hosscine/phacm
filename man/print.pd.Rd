@@ -4,10 +4,12 @@
 \alias{print.pd}
 \title{Print persistent diagram}
 \usage{
-\method{print}{pd}(x)
+\method{print}{pd}(x, ...)
 }
 \arguments{
 \item{x}{\code{pd} object.}
+
+\item{...}{additional arguments affecting the summary produced.}
 }
 \description{
 Prints \code{pd} object like \code{tibble}.

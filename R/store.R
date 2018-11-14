@@ -10,15 +10,15 @@
 
 #' Set the last persistent diagram to be fetched by lastPD()
 #'
-#' @seealso [lastPD()]
+#' @seealso [last_pd()]
 #' @export
 #' @keywords internal
-setLastPD <- function(value) .store$set(value)
+set_last_pd <- function(value) .store$set(value)
 
 
 #' Retrieve the last persistent diagram to be computed.
 #'
-#' @seealso [computePD()]
+#' @seealso [compute_pd()]
 #' @export
 #' @keywords internal
-lastPD <- function() .store$get()
+last_pd <- function() .store$get()
