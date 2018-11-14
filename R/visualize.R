@@ -1,19 +1,27 @@
 #' Plot persistent diagram.
 #'
-#' Plot diagram like \code{phom} package.
+#' Plot diagram like `phom` package.
 #'
 #' @param x persistent diagram.
-#'
+#' @param scale limitation of birth and death.
+#' @param ... additional graphical arguments, see [plot], [plot.default] and [par].
 #' @export
-#'
-plot.pd <- function(x, ...) {
+plot.pd <- function(x, scale = attr(rawPD(pd), "scale"), ...) {
   pd <- finitePD(x)
   maxdimention <- attr(pd, "maxdimension") + 1
-  scale <- attr(pd, "scale")
+  assert_that(myfs::is.range(scale))
 
-  graphics::plot(pd[, 2], pd[, 3], xlim = scale, ylim = scale, cex = point, cex.axis = point,
-                 col = pd[, 1] + 1, pch = pd[, 1] + 1, xlab = "Birth", ylab = "Death", cex.lab = 1.5, cex.main = 2)
+  elp <- myfs::overwriteEllipsis(..., x = pd$Birth, y = pd$Death)
+  elp <- myfs::softwriteEllipsis(..., append = elp,
+                                 xlab = "Birth", ylab = "Death",
+                                 xlim = scale, ylim = scale,
+                                 col = pd$dimension + 1,
+                                 pch = pd$dimension + 1)
+  do.call(graphics::plot, elp)
   graphics::abline(0, 1)
+
+  # graphics::plot(pd[, 2], pd[, 3], xlim = scale, ylim = scale, cex = point, cex.axis = point,
+                 # col = pd[, 1] + 1, pch = pd[, 1] + 1, xlab = "Birth", ylab = "Death", cex.lab = 1.5, cex.main = 2)
 
   legends <- 0
   for (i in (0:(maxdimention - 1))) {
@@ -37,11 +45,12 @@ plot.pd <- function(x, ...) {
 #'
 #' @examples
 print.pd <- function(x, ...) {
-  update_summary <- function(x) {
-    x$summary <- paste0("Persistent Diagram [", x$summary %>% stringr::str_sub(6, -6), "]")
-    return(x)
-  }
-  x %>% rawPD %>% setter::set_class("matrix") %>% tibble::trunc_mat() %>% update_summary %>% print
+  info <- paste0("Persistent Diagram [", nrow(x), "]")
+  x %<>%
+    setter::set_class(c("tbl_df", "tbl", "data.frame")) %>%
+    tibble::trunc_mat()
+  x$summary <- info
+  print(x)
 }
 
 #' Title

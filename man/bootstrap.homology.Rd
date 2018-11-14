@@ -7,9 +7,6 @@
 bootstrap.homology(X, maxdim, maxscale, const.band = 0,
   maximum.thresh = F)
 }
-\arguments{
-\item{maximum.thresh}{}
-}
 \description{
 Title
 }

@@ -4,10 +4,14 @@
 \alias{plot.pd}
 \title{Plot persistent diagram.}
 \usage{
-\method{plot}{pd}(x, ...)
+\method{plot}{pd}(x, scale = attr(rawPD(pd), "scale"), ...)
 }
 \arguments{
 \item{x}{persistent diagram.}
+
+\item{scale}{limitation of birth and death.}
+
+\item{...}{additional graphical arguments, see \link{plot}, \link{plot.default} and \link{par}.}
 }
 \description{
 Plot diagram like \code{phom} package.

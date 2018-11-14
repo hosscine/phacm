@@ -32,9 +32,8 @@ library(TDA)
 circle <- circleUnif(100)
 circle.diag <- computePD(circle, maxdimension = 1, maxscale = 1)
 # you can see plotted persistent diagram.
-
 }
 \seealso{
 \code{\link[TDA:ripsDiag]{TDA::ripsDiag()}}, \code{\link[=lastPD]{lastPD()}}
 }
-\concept{compute persistent homology.}
+\concept{persistent homology computation}

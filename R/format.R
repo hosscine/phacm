@@ -1,21 +1,39 @@
-#' Format persistent diagram
+#' Extract persistent diagram
 #'
 #' Extracts persistent diagram from bad behavier object computed by `TDA`` packagee.
 #' The object is frequently a list contains diagram.
 #' So you need to extract diagram by this function to handle diagram.
 #'
-#' @param pd persistent diagram.
-#'
-#' @return extracted persistent diagram.
-#'
-rawPD <- function(pd) {
-  if ("list" %in% class(pd))
-    pd <- pd$diagram
-  else if (c("pd", "diagram") %in% class(pd) %>% !any())
-    stop("cannot extract persistent diagram from input")
-  class(pd) <- "pd"
-  return(pd)
+#' @param x `list` object that contains `diagram` computed by such as [TDA::ripsDiag()]
+#' @return extracted `diagram` object.
+#' @export
+extract_diagram <- function(x) {
+  if ("list" %in% class(x))
+    return(x$diagram)
+  else if (c("pd", "diagram") %in% class(x) %>% any %>% magrittr::not())
+    stop("the object dons not contain diagram")
+  else
+    return(x)
 }
+
+#' Convert `diagram` to `pd`
+#'
+#' @param x `diagram` object computed by `TDA` package.
+#' @return `pd` object.
+#' @export
+#' @seealso [is_pd()], [tidy_pd()]
+as_pd <- function(x) {
+  if (is_pd(x)) return(x)
+  x %<>% extract_diagram %>% tidy_pd
+  return(x)
+}
+
+#' Test if the object is a pd
+#'
+#' @param x object.
+#' @return TRUE if the object inherits from the pd class.
+#' @export
+is_pd <- function(x) inherits(x, "pd") & is.recursive(x)
 
 #' Title
 #'
@@ -32,15 +50,17 @@ finitePD <- function(pd, replace = attr(pd, "scale")[2]) {
   return(pd)
 }
 
-#' Title
+#' Convert the `diagram` object to `pd` object that inherits `tibble`
 #'
-#' @param PD
-#'
-#' @return
+#' @param x `diagram`.
+#' @return `pd` object.
 #' @export
-#'
-#' @examples
-tidyPD <- function(pd) {
-  pd %>% rawPD %>% setter::set_class("matrix") %>% tibble::as.tibble() %>% tibble::rowid_to_column("id") %>%
-    tidyr::gather(time, value, -id, -dimension)
+#' @seealso [tibble::tibble]
+tidy_pd <- function(x) {
+  x %<>% extract_diagram
+  tibble::tibble(dim = x[, "dimension"] %>% as.integer,
+                      birth = x[, "Birth"],
+                      death = x[, "Death"]) %>%
+  setter::copy_attributes(x, c("maxdimension", "scale")) %>%
+  setter::set_class(c("pd", "data.frame"))
 }

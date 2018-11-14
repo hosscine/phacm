@@ -13,17 +13,15 @@
 #' @param plot if `TRUE`, plot diagram.
 #'
 #' @return persistent diagram.
-#' @family compute persistent homology.
+#' @family persistent homology computation
 #' @seealso [TDA::ripsDiag()], [lastPD()]
 #' @export
-#'
 #' @examples
 #' library(TDA)
 #'
 #' circle <- circleUnif(100)
 #' circle.diag <- computePD(circle, maxdimension = 1, maxscale = 1)
 #' # you can see plotted persistent diagram.
-#'
 computePD <- function(X, maxdimension, maxscale, plot = TRUE) {
   pd <- TDA::ripsDiag(X, maxdimension = maxdimension, maxscale = maxscale) %>% rawPD()
   setLastPD(pd)

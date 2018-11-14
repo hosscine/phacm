@@ -16,7 +16,7 @@ Imports:
     graphics,
     stats,
     grDevices,
-    tidyr,
+    dplyr,
     tibble,
     stringr,
     setter

@@ -5,10 +5,8 @@
 #' @param maxscale
 #' @param const.band
 #' @param maximum.thresh
-#'
 #' @return
 #' @export
-#'
 #' @examples
 bootstrap.homology <- function(X, maxdim, maxscale, const.band = 0, maximum.thresh = F) {
   # require(pracma)
