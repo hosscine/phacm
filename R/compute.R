@@ -25,9 +25,8 @@
 #' # you can see plotted persistent diagram.
 #'
 computePD <- function(X, maxdimension, maxscale, plot = TRUE) {
-  pd <- TDA::ripsDiag(X, maxdimension = maxdimension, maxscale = maxscale)$diagram
-  class(pd) <- "diagram"
-  diagram <<- pd
+  pd <- TDA::ripsDiag(X, maxdimension = maxdimension, maxscale = maxscale) %>% rawPD()
+  setLastPD(pd)
   return(pd)
 }
 

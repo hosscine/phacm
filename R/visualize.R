@@ -6,7 +6,7 @@
 #'
 #' @export
 #'
-plot.diagram <- function(x, ...) {
+plot.pd <- function(x, ...) {
   pd <- finitePD(x)
   maxdimention <- attr(pd, "maxdimension") + 1
   scale <- attr(pd, "scale")
@@ -26,6 +26,7 @@ plot.diagram <- function(x, ...) {
                    pch = 1:maxdimention, cex = point, pt.cex = point)
 }
 
+
 #' Title
 #'
 #' @param x
@@ -35,7 +36,7 @@ plot.diagram <- function(x, ...) {
 #' @export
 #'
 #' @examples
-print.diagram <- function(x, ...) {
+print.pd <- function(x, ...) {
   update_summary <- function(x) {
     x$summary <- paste0("Persistent Diagram [", x$summary %>% stringr::str_sub(6, -6), "]")
     return(x)

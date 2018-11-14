@@ -9,13 +9,13 @@
 #' @return extracted persistent diagram.
 #'
 rawPD <- function(pd) {
-  if (class(pd) == "list")
+  if ("list" %in% class(pd))
     pd <- pd$diagram
-  else if (class(pd) != "diagram")
+  else if (c("pd", "diagram") %in% class(pd) %>% !any())
     stop("cannot extract persistent diagram from input")
+  class(pd) <- "pd"
   return(pd)
 }
-
 
 #' Title
 #'
