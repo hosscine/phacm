@@ -9,8 +9,11 @@
 \arguments{
 \item{x}{\code{pd} object.}
 
-\item{...}{additional arguments affecting the summary produced.}
+\item{...}{other arguments passed on to individual methods.}
 }
 \description{
 Prints \code{pd} object like \code{tibble}.
+}
+\seealso{
+\code{\link[=compute_pd]{compute_pd()}}, \code{\link[=plot.pd]{plot.pd()}}, \code{\link[=as_pd]{as_pd()}}
 }

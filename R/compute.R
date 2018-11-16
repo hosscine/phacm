@@ -20,7 +20,7 @@
 #' library(TDA)
 #'
 #' circle <- circleUnif(100)
-#' circle.diag <- computePD(circle, maxdimension = 1, maxscale = 1)
+#' circle.diag <- compute_pd(circle, maxdimension = 1, maxscale = 1)
 #' # you can see plotted persistent diagram.
 compute_pd <- function(X, maxdimension, maxscale, plot = TRUE) {
   pd <- TDA::ripsDiag(X, maxdimension = maxdimension, maxscale = maxscale) %>% as_pd

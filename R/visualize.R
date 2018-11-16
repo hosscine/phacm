@@ -40,8 +40,9 @@ plot.pd <- function(x, scale = attr(x, "scale"), size = 1.5, legend.size = 1.5, 
 #' Prints `pd` object like `tibble`.
 #'
 #' @param x `pd` object.
-#' @param ... additional arguments affecting the summary produced.
+#' @param ... other arguments passed on to individual methods.
 #' @export
+#' @seealso [compute_pd()], [plot.pd()], [as_pd()]
 #' @examples
 print.pd <- function(x, ...) {
   info <- paste0("Persistent Diagram [", nrow(x), "]")
@@ -52,8 +53,26 @@ print.pd <- function(x, ...) {
   print(x)
 }
 
-print.pl <- function(x, ...) {
-
+#' Print persistent landscape
+#'
+#' Prints `pl` object to understand it quickly.
+#'
+#' @param x `pl` object.
+#' @param ... other arguments passed on to individual methods.
+#' @param digit integer to be passed [round()]
+#' @seealso [compute_pl()]
+#' @export
+print.pl <- function(x, ..., digit = 3) {
+  cat("# Persistent Landscape\n")
+  thresh <- x[x$dimnames] %>% unlist %>% max %>% magrittr::divide_by(4)
+  for (d in x$dimnames) {
+    val <- x[[d]]
+    cat("\n- Dimension", stringr::str_sub(d, 2), "\n")
+    cat("  - cycle:", val %>% count_local_maximal(thresh), "or less\n")
+    cat("  - max  :", max(val) %>% round(digit), "\n")
+    cat("  - mean :", mean(val) %>% round(digit), "\n")
+    cat("  - var  :", var(val) %>% round(digit), "\n")
+  }
 }
 
 #' Title

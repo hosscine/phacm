@@ -25,7 +25,8 @@ count_local_maximal.default <- function(x, thresh) {
 #' @export
 #' @rdname count_local_maximal
 count_local_maximal.pl <- function(x, thresh) {
-  purrr::map_int(x$dimnames, ~ count_local_maximal(x[[.]], thresh))
+  purrr::map_int(x$dimnames, ~ count_local_maximal(x[[.]], thresh)) %>%
+    setter::set_names(x$dimnames)
 }
 
 #' @export

@@ -15,3 +15,6 @@ TRUE if the object inherits from the pd class.
 \description{
 Test if the object is a pd
 }
+\seealso{
+\code{\link[=as_pd]{as_pd()}}
+}

@@ -30,7 +30,7 @@ The keeped diagram can be took out by \code{\link[=last_pd]{last_pd()}}.
 library(TDA)
 
 circle <- circleUnif(100)
-circle.diag <- computePD(circle, maxdimension = 1, maxscale = 1)
+circle.diag <- compute_pd(circle, maxdimension = 1, maxscale = 1)
 # you can see plotted persistent diagram.
 }
 \seealso{

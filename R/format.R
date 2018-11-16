@@ -32,6 +32,7 @@ as_pd <- function(x) {
 #'
 #' @param x object.
 #' @return TRUE if the object inherits from the pd class.
+#' @seealso [as_pd()]
 #' @export
 is_pd <- function(x) inherits(x, "pd") & is.recursive(x)
 
