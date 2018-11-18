@@ -21,6 +21,9 @@ Imports:
     stringr,
     assertthat,
     setter
+Depends:
+    ggplot2,
+    broom
 Remotes: hosscine/myfs
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
