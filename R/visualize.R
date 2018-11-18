@@ -80,8 +80,20 @@ print.pl <- function(x, ..., digit = 3) {
   }
 }
 
-plot.pl <- function(x) {
-  x %>% magrittr::extract(.$dimnames)
+#' Autoplot persistent landscape
+#'
+#' @param x `pl` object.
+#' @param ... ignored.
+#' @return `ggplot` object.
+#' @export
+autoplot.pl <- function(x, ...) {
+  x %>% tidyr::gather(key, value, -tseq) %>%
+    ggplot(aes(x = tseq, y = value, group = key, fill = key)) +
+    geom_area(alpha = 0.5) +
+    theme_bw() +
+    labs(x = "(Birth + Death) / 2",
+         y = "(Birth - Death) / 2",
+         fill = "Dimension")
 }
 
 #' Title

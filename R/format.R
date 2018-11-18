@@ -71,5 +71,5 @@ tidy_pd <- function(x) {
                  birth = x[, "Birth"],
                  death = x[, "Death"]) %>%
     setter::copy_attributes(x, c("maxdimension", "scale")) %>%
-    setter::set_class(c("pd", "data.frame"))
+    setter::set_class(c("pd", "tbl_df", "tbl", "data.frame"))
 }

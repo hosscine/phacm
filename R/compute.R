@@ -61,7 +61,7 @@ compute_pl <- function(pd) {
     dplyr::bind_cols() %>%
     setter::set_names(paste0("dim", dimension)) %>%
     tibble::rowid_to_column("tseq") %>%
-    setter::set_class(c("pl", "data.frame")) %>%
+    setter::set_class(c("pl", "tbl_df", "tbl", "data.frame")) %>%
     setter::set_attributes(pd = pd %>% as_pd)
 }
 
