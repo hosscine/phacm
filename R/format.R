@@ -39,7 +39,7 @@ is_pd <- function(x) inherits(x, "pd") & is.recursive(x)
 as_diagram <- function(pd) {
   if (inherits(pd, "diagram")) return(pd)
   else if (!is_pd(pd))
-    stop("can not convert to the diagram from", class(pd)[1], "object")
+    stop("can not convert to the diagram from ", class(pd)[1], " object")
   pd %>%
     as.matrix %>%
     setter::copy_attributes(pd, c("maxdimension", "scale")) %>%

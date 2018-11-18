@@ -63,16 +63,25 @@ print.pd <- function(x, ...) {
 #' @seealso [compute_pl()]
 #' @export
 print.pl <- function(x, ..., digit = 3) {
+  if (!assertthat::has_name(x, "tseq")){
+    print.data.frame(x)
+    return()
+  }
+
   cat("# Persistent Landscape\n")
-  thresh <- x[x$dimnames] %>% unlist %>% max %>% magrittr::divide_by(4)
-  for (d in x$dimnames) {
+  thresh <- x %>% dplyr::select(-tseq) %>% unlist %>% max %>% magrittr::divide_by(4)
+  for (d in colnames(x)[-1]) {
     val <- x[[d]]
-    cat("\n- Dimension", stringr::str_sub(d, 2), "\n")
+    cat("\n- Dimension", stringr::str_sub(d, 4), "\n")
     cat("  - cycle:", val %>% count_local_maximal(thresh), "or less\n")
     cat("  - max  :", max(val) %>% round(digit), "\n")
     cat("  - mean :", mean(val) %>% round(digit), "\n")
     cat("  - var  :", var(val) %>% round(digit), "\n")
   }
+}
+
+plot.pl <- function(x) {
+  x %>% magrittr::extract(.$dimnames)
 }
 
 #' Title
