@@ -80,6 +80,24 @@ print.pl <- function(x, ..., digit = 3) {
   }
 }
 
+autoplot.pd <- function(x, ...) {
+  scale <- attr(x, "scale")
+  x$dim %<>% {paste0("dim", .)} %>% as.factor
+  diagonal <- list(scale, -scale) %>%
+    purrr::map(~ scales::cbreaks(.)$breaks) %>%
+    unlist %>% unique
+
+  x %>%
+    ggplot2::ggplot(aes(x = birth, y = death, group = dim)) +
+    ggplot2::geom_abline(intercept = diagonal, slope = 1, colour = "white") +
+    ggplot2::geom_abline(intercept = 0, slope = 1, size = 1) +
+    ggplot2::geom_point(aes(colour = dim, shape = dim), size = 2) +
+    ggplot2::xlim(scale) +
+    ggplot2::ylim(scale) +
+    ggplot2::labs(x = "Birth", y = "Death",
+                  colour = "Dimension", shape = "Dimension")
+}
+
 #' Autoplot persistent landscape
 #'
 #' @param x `pl` object.
@@ -87,13 +105,14 @@ print.pl <- function(x, ..., digit = 3) {
 #' @return `ggplot` object.
 #' @export
 autoplot.pl <- function(x, ...) {
-  x %>% tidyr::gather(key, value, -tseq) %>%
-    ggplot(aes(x = tseq, y = value, group = key, fill = key)) +
-    geom_area(alpha = 0.5) +
-    theme_bw() +
-    labs(x = "(Birth + Death) / 2",
-         y = "(Birth - Death) / 2",
-         fill = "Dimension")
+  x %>%
+    tidyr::gather(key, value, -tseq) %>%
+    ggplot2::ggplot(aes(x = tseq, y = value, group = key, fill = key)) +
+    ggplot2::geom_area(alpha = 0.5) +
+    ggplot2::theme_bw() +
+    ggplot2::labs(x = "(Birth + Death) / 2",
+                  y = "(Birth - Death) / 2",
+                  fill = "Dimension")
 }
 
 #' Title
