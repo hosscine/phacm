@@ -4,12 +4,12 @@
 \alias{autoplot.pl}
 \title{Autoplot persistent landscape}
 \usage{
-\method{autoplot}{pl}(x, ...)
+\method{autoplot}{pl}(object, ...)
 }
 \arguments{
-\item{x}{\code{pl} object.}
-
 \item{...}{ignored.}
+
+\item{x}{\code{pl} object.}
 }
 \value{
 \code{ggplot} object.

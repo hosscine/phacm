@@ -47,9 +47,9 @@ compute_pd <- function(X, maxdimension, maxscale, plot = TRUE) {
 #' @seealso [compute_pd], [TDA::landscape()]
 #' @examples
 #' anulus <- anulusUnif(100)
-#' anulus.pd <- computePD(anulus, 1, 1)
+#' anulus.pd <- compute_pd(anulus, 1, 1)
 #'
-#' anulus.pl <- computePL(anulus.pd)
+#' anulus.pl <- compute_pl(anulus.pd)
 #' plot(anulus.pl)
 compute_pl <- function(pd) {
   diagram <- pd %>% extract_diagram %>% as_diagram

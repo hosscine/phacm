@@ -27,9 +27,9 @@ the persistent diagram.
 }
 \examples{
 anulus <- anulusUnif(100)
-anulus.pd <- computePD(anulus, 1, 1)
+anulus.pd <- compute_pd(anulus, 1, 1)
 
-anulus.pl <- computePL(anulus.pd)
+anulus.pl <- compute_pl(anulus.pd)
 plot(anulus.pl)
 }
 \seealso{

@@ -80,14 +80,20 @@ print.pl <- function(x, ..., digit = 3) {
   }
 }
 
-autoplot.pd <- function(x, ...) {
-  scale <- attr(x, "scale")
-  x$dim %<>% {paste0("dim", .)} %>% as.factor
+#' Autoplot persistent diagram
+#'
+#' @param object `pd` object.
+#' @param ... ignored.
+#' @return `ggplot` object.
+#' @export
+autoplot.pd <- function(object, ...) {
+  scale <- attr(object, "scale")
+  object$dim %<>% {paste0("dim", .)} %>% as.factor
   diagonal <- list(scale, -scale) %>%
     purrr::map(~ scales::cbreaks(.)$breaks) %>%
     unlist %>% unique
 
-  x %>%
+  object %>%
     ggplot2::ggplot(aes(x = birth, y = death, group = dim)) +
     ggplot2::geom_abline(intercept = diagonal, slope = 1, colour = "white") +
     ggplot2::geom_abline(intercept = 0, slope = 1, size = 1) +
@@ -100,11 +106,11 @@ autoplot.pd <- function(x, ...) {
 
 #' Autoplot persistent landscape
 #'
-#' @param x `pl` object.
+#' @param object `pl` object.
 #' @param ... ignored.
 #' @return `ggplot` object.
 #' @export
-autoplot.pl <- function(x, ...) {
+autoplot.pl <- function(object, ...) {
   x %>%
     tidyr::gather(key, value, -tseq) %>%
     ggplot2::ggplot(aes(x = tseq, y = value, group = key, fill = key)) +
