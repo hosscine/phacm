@@ -65,20 +65,68 @@ count_smooth_maximal.pl <- function(x,
   assert_that(is.function(exist.method))
   assert_that(is.function(cutoff.method))
 
-  sms.list <- lapply(spar, function(sp) stats::smooth.spline(x = 1:length(pl), y = pl, spar = sp))
+  sms.pl <- compute_smooth_pl(x) %>%
+    mutate(d = str_sub(dim, 4) %>% as.integer) %>%
+    nest(-spar, -dim)
+  exist.thresh <- exist.method(x)
+  cutoff <- . %>% {2 * cutoff.method(x) * nd_area(1) / nd_area(.)}
 
-  estimate <- sms.list %>% sapply(countLocalMaximalPL, thresh) %>% mean
-  if (!plot)
-    return(estimate)
+  exist <- x %>%
+    tidyr::gather(dim, value, -tseq) %>%
+    tidyr::nest(-dim, .key = lands) %>%
+    dplyr::mutate(exist = purrr::map_lgl(lands, ~ .$value %>% max > exist.thresh)) %>%
+    magrittr::use_series(exist)
 
-  # if plot == true then
-  elp <- myfs::overwriteEllipsis(..., x = 0, type = "n", xlim = c(0, pl %>% length), ylim = c(0,
-                                                                                              pl %>% max))
-  elp <- myfs::softwriteEllipsis(..., append = elp, xlab = "(Birth + Death) / 2", ylab = "(Death - Birth) / 2")
-  do.call(graphics::plot, elp)
-  graphics::abline(thresh, 0, col = 2)
-  col <- sms.list %>% length %>% grDevices::rainbow()
-  for (i in 1:length(sms.list)) graphics::lines(sms.list[[i]]$y, col = col[i])
+  result <- sms.pl %>%
+    dplyr::mutate(count = purrr::map_int(
+      data, ~ count_local_maximal(x = .$smooth[[1]], thresh = cutoff(.$d)))) %>%
+    dplyr::select(-data) %>%
+    tidyr::nest(-dim, .key = detail) %>%
+    dplyr::mutate(betti = map_dbl(detail, ~ mean(.$count)) * exist) %>%
+    dplyr::bind_cols(exist = exist)
 
-  return(estimate)
+  if (!plot) return(result)
+
+  # # if plot == true then
+  # elp <- myfs::overwriteEllipsis(..., x = 0, type = "n", xlim = c(0, pl %>% length), ylim = c(0,
+  #                                                                                             pl %>% max))
+  # elp <- myfs::softwriteEllipsis(..., append = elp, xlab = "(Birth + Death) / 2", ylab = "(Death - Birth) / 2")
+  # do.call(graphics::plot, elp)
+  # graphics::abline(thresh, 0, col = 2)
+  # col <- sms.list %>% length %>% grDevices::rainbow()
+  # for (i in 1:length(sms.list)) graphics::lines(sms.list[[i]]$y, col = col[i])
+
+  return(result)
+}
+
+#' Smooth persistent landscape using `stats::smooth.spline()`
+#'
+#' @param pl `pl` object.
+#' @param spar smoothing parameters to be passed [stats::smooth.spline()].
+#' @return smoothed persistent landscape as numeric vector.
+#' @seealso [count_smooth_maximal()], [stats::smooth.spline()]
+#' @export
+compute_smooth_pl <- function(pl, spar = seq(0, 1, 0.1)) {
+  assert_that(inherits(pl, "pl"))
+
+  pl.list <- pl %>%
+    tidyr::gather(key, value, -tseq) %>%
+    split(.$key)
+
+  lapply(pl.list, function(l)
+    purrr::map(spar, ~ stats::smooth.spline(x = l$tseq, y = l$value, spar = .))) %>%
+    tibble::as.tibble() %>%
+    # dplyr::mutate(smooth = map(extract2, 1)) %>%
+    dplyr::bind_cols(spar = spar) %>%
+    tidyr::gather(dim, smooth, -spar)
+
+  # pl %>%
+  #   tidyr::gather(dim, value, -tseq) %>%
+  #   tidyr::nest(-dim, .key = "lands") %>%
+  #   tidyr::crossing(spar = spar) %>%
+  #   tidyr::nest(-dim) %>%
+  #   dplyr::mutate(smooth = purrr::map(data, ~ myfs::debugText(.$lands, .$spar)))
+  # dplyr::mutate(smooth = purrr::map(data, ~ stats::smooth.spline(x = .$lands$tseq,
+  #                                                                y = .$lands$value,
+  #                                                                spar = .$spar)))
 }

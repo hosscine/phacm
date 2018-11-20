@@ -64,7 +64,7 @@ print.pd <- function(x, ...) {
 #' @export
 print.pl <- function(x, ..., digit = 3) {
   if (!assertthat::has_name(x, "tseq")){
-    print.data.frame(x)
+    print(trunc_mat(x))
     return()
   }
 
