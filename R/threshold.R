@@ -57,3 +57,22 @@ zero_hat_threshold.pd <- function(x) {
 zero_hat_threshold.pl <- function(x) {
   attr(x, "pd") %>% zero_hat_threshold
 }
+
+#' Calculate area of the n-dimensional hypersphere
+#'
+#' Threshold for n-dimensional persistence is must be magnified
+#' by considering difficulty of forming n-dimensional hypersphere.
+#' In paticular, use threshold multipuled by `nd_surface(1) / nd_surface(n)`.
+#'
+#' The unit circle is a 1-dimensional hole and its surface area is `2 * pi`.
+#' Then, the unit sphere is a 2-dimensional hole and its surface area is `4 * pi`.
+#' To form both the unit circle and the unit sphere with data points
+#' having the same surface variance,
+#' the unit sphere must have twice as many data points as the unit circle.
+#'
+#' @param n dimension.
+#' @return area of n-dimensional superplane.
+#' @export
+nd_surface <- function(n) {
+  2 * pi ** ((n + 1) / 2) / gamma((n + 1) / 2)
+}
