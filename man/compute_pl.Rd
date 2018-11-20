@@ -33,5 +33,5 @@ anulus.pl <- compute_pl(anulus.pd)
 plot(anulus.pl)
 }
 \seealso{
-\link{compute_pd}, \code{\link[TDA:landscape]{TDA::landscape()}}
+\link{compute_pd}, \code{\link[TDA:landscape]{TDA::landscape()}}, \code{\link[=autoplot.pl]{autoplot.pl()}}, \code{\link[=count_local_maximal]{count_local_maximal()}}
 }

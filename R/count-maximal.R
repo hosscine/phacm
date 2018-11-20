@@ -7,6 +7,7 @@
 #' @param x a vector or a persistent landscape object inherits `pl`.
 #' @param thresh threshold to ignore local maximals under the value.
 #' @return the number of local maximal.
+#' @seealso [compute_pd()]
 #' @export
 count_local_maximal <- function(x, thresh = 0) {
   UseMethod("count_local_maximal")

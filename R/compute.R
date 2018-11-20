@@ -14,7 +14,7 @@
 #'
 #' @return persistent diagram.
 #' @family persistent homology computation
-#' @seealso [TDA::ripsDiag()], [last_pd()]
+#' @seealso [TDA::ripsDiag()], [last_pd()], [plot.pd()], [autoplot.pd()]
 #' @export
 #' @examples
 #' library(TDA)
@@ -44,7 +44,7 @@ compute_pd <- function(X, maxdimension, maxscale, plot = TRUE) {
 #' @param pd persistent diagram object inherits `pd`.
 #' @return persistent landscape object inherits `pl`.
 #' @export
-#' @seealso [compute_pd], [TDA::landscape()]
+#' @seealso [compute_pd], [TDA::landscape()], [autoplot.pl()], [count_local_maximal()]
 #' @examples
 #' anulus <- anulusUnif(100)
 #' anulus.pd <- compute_pd(anulus, 1, 1)

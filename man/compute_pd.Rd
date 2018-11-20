@@ -34,6 +34,6 @@ circle.diag <- compute_pd(circle, maxdimension = 1, maxscale = 1)
 # you can see plotted persistent diagram.
 }
 \seealso{
-\code{\link[TDA:ripsDiag]{TDA::ripsDiag()}}, \code{\link[=last_pd]{last_pd()}}
+\code{\link[TDA:ripsDiag]{TDA::ripsDiag()}}, \code{\link[=last_pd]{last_pd()}}, \code{\link[=plot.pd]{plot.pd()}}, \code{\link[=autoplot.pd]{autoplot.pd()}}
 }
 \concept{persistent homology computation}
