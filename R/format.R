@@ -16,7 +16,7 @@ extract_diagram <- function(x) {
     return(x)
 }
 
-#' Convert `diagram` to `pd`
+#' Convert `TDA::diagram` to `pd`
 #'
 #' @param x `diagram` object computed by `TDA` package.
 #' @return `pd` object.
@@ -28,14 +28,19 @@ as_pd <- function(x) {
   return(x)
 }
 
-#' Test if the object is a pd
+#' Test if the object is a `pd`
 #'
 #' @param x object.
-#' @return TRUE if the object inherits from the pd class.
+#' @return `TRUE` if the object inherits the `pd` class.
 #' @seealso [as_pd()]
 #' @export
 is_pd <- function(x) inherits(x, "pd") & is.recursive(x)
 
+#' Convert `pd` to `TDA::diagram`
+#'
+#' @param pd `pd` object.
+#' @return converted `TDA::diagram`
+#' @export
 as_diagram <- function(pd) {
   if (inherits(pd, "diagram")) return(pd)
   else if (!is_pd(pd))

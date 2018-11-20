@@ -57,10 +57,12 @@ compute_pl <- function(pd) {
   scale <- attr(diagram, "scale")
   tseq <- seq(min(scale), max(scale), length.out = 500)
 
-  purrr::map(dimension, ~ TDA::landscape(pd, dimension = ., tseq = tseq)) %>%
+  purrr::map(dimension, ~ TDA::landscape(diagram, dimension = ., tseq = tseq)) %>%
     dplyr::bind_cols() %>%
-    setter::set_names(paste0("dim", dimension)) %>%
+    setter::set_names(dimension %>% as.character) %>%
     tibble::rowid_to_column("tseq") %>%
+    tidyr::gather(dim, value, -tseq) %>%
+    dplyr::mutate(dim = as.integer(dim)) %>%
     setter::set_class(c("pl", "tbl_df", "tbl", "data.frame")) %>%
     setter::set_attributes(pd = pd %>% as_pd)
 }

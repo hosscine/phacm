@@ -2,7 +2,7 @@
 % Please edit documentation in R/format.R
 \name{as_pd}
 \alias{as_pd}
-\title{Convert \code{diagram} to \code{pd}}
+\title{Convert \code{TDA::diagram} to \code{pd}}
 \usage{
 as_pd(x)
 }
@@ -13,7 +13,7 @@ as_pd(x)
 \code{pd} object.
 }
 \description{
-Convert \code{diagram} to \code{pd}
+Convert \code{TDA::diagram} to \code{pd}
 }
 \seealso{
 \code{\link[=is_pd]{is_pd()}}, \code{\link[=tidy_pd]{tidy_pd()}}

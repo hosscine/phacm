@@ -63,17 +63,18 @@ print.pd <- function(x, ...) {
 #' @seealso [compute_pl()]
 #' @export
 print.pl <- function(x, ..., digit = 3) {
-  if (!assertthat::has_name(x, "tseq")){
+  if (!assertthat::has_name(x, "value") || !assertthat::has_name(x, "dim")){
     print(trunc_mat(x))
     return()
   }
 
+  thresh <- x %>% zero_hat_threshold %>% magrittr::divide_by(4)
+  betti <- x %>% count_local_maximal(thresh)
   cat("# Persistent Landscape\n")
-  thresh <- x %>% dplyr::select(-tseq) %>% unlist %>% max %>% magrittr::divide_by(4)
-  for (d in colnames(x)[-1]) {
+  for (d in x$dim) {
     val <- x[[d]]
     cat("\n- Dimension", stringr::str_sub(d, 4), "\n")
-    cat("  - cycle:", val %>% count_local_maximal(thresh), "or less\n")
+    cat("  - cycle:", betti(d), "or less\n")
     cat("  - max  :", max(val) %>% round(digit), "\n")
     cat("  - mean :", mean(val) %>% round(digit), "\n")
     cat("  - var  :", var(val) %>% round(digit), "\n")

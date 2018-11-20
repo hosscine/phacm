@@ -34,6 +34,8 @@ for taking out small persistence holes.}
 \item{x}{\code{pd} object.}
 
 \item{...}{ignored.}
+
+\item{x}{\code{pl} object.}
 }
 \value{
 counting result.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/format.R
 \name{is_pd}
 \alias{is_pd}
-\title{Test if the object is a pd}
+\title{Test if the object is a \code{pd}}
 \usage{
 is_pd(x)
 }
@@ -10,10 +10,10 @@ is_pd(x)
 \item{x}{object.}
 }
 \value{
-TRUE if the object inherits from the pd class.
+\code{TRUE} if the object inherits the \code{pd} class.
 }
 \description{
-Test if the object is a pd
+Test if the object is a \code{pd}
 }
 \seealso{
 \code{\link[=as_pd]{as_pd()}}
