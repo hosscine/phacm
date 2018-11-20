@@ -1,20 +1,33 @@
-# 平滑化して平??<U+383C><U+3E37>??<U+393C><U+3E34>?<U+383C><U+3E33>?ク数を数える。ダイアグラ??<U+393C><U+3E63>?<U+3E30>直入力可??<U+383C><U+3E32>
+#' Count local maximal of persistent landscape with smoothing
+#'
+#' @param x `pd` object or `pl` object.
+#' @param ... other arguments passed to specific methods.
+#' @return counting result.
+#' @export
+count_smooth_maximal <- function(x, ...) {
+  UseMethod("count_smooth_maximal")
+}
+
+
 #' Title
 #'
-#' @param PD
-#' @param dimension
-#' @param thresh
 #' @param spar
 #' @param plot
 #' @param ...
+#' @param x
+#' @param exist.method
+#' @param cutoff.method
 #'
 #' @return
 #' @export
 #'
 #' @examples
-countSmoothLocalMaximalPD <- function(pd, dimension, thresh = NULL, spar = seq(0, 1, 0.1), plot = F,
-                                      ...) {
-  PL <- computePL(pd, dimension = dimension)
+count_smooth_maximal.pd <- function(x,
+                                    exist.method = zero_threshold,
+                                    cutoff.method,
+                                    spar = seq(0, 1, 0.1),
+                                    plot = TRUE, ...) {
+  pl <- compute_pl(pd)
   if (is.null(thresh))
     thresh <- max(PL)/4
   estimate <- countSmoothLocalMaximalPL(PL, thresh, spar, plot, ...)
@@ -35,6 +48,9 @@ countSmoothLocalMaximalPD <- function(pd, dimension, thresh = NULL, spar = seq(0
 #'
 #' @examples
 countSmoothLocalMaximalPL <- function(pl, thresh = max(pl)/4, spar = seq(0, 1, 0.1), plot = F, ...) {
+  assert_that()
+  assert_that()
+
   smPL.list <- lapply(spar, function(sp) stats::smooth.spline(x = 1:length(pl), y = pl, spar = sp))
 
   estimate <- smPL.list %>% sapply(countLocalMaximalPL, thresh) %>% mean
