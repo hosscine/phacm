@@ -70,11 +70,12 @@ print.pl <- function(x, ..., digit = 3) {
 
   thresh <- x %>% zero_hat_threshold %>% magrittr::divide_by(4)
   betti <- x %>% count_local_maximal(thresh)
+
   cat("# Persistent Landscape\n")
-  for (d in x$dim) {
-    val <- x[[d]]
-    cat("\n- Dimension", stringr::str_sub(d, 4), "\n")
-    cat("  - cycle:", betti(d), "or less\n")
+  for (d in x$dim %>% unique) {
+    val <- x %>% filter(dim == d) %>% use_series(value)
+    cat("\n- Dimension", d, "\n")
+    cat("  - cycle:", betti[d], "or less\n")
     cat("  - max  :", max(val) %>% round(digit), "\n")
     cat("  - mean :", mean(val) %>% round(digit), "\n")
     cat("  - var  :", var(val) %>% round(digit), "\n")
@@ -113,8 +114,7 @@ autoplot.pd <- function(object, ...) {
 #' @export
 autoplot.pl <- function(object, ...) {
   x %>%
-    tidyr::gather(key, value, -tseq) %>%
-    ggplot2::ggplot(aes(x = tseq, y = value, group = key, fill = key)) +
+    ggplot2::ggplot(aes(x = tseq, y = value, group = dim, fill = dim)) +
     ggplot2::geom_area(alpha = 0.5) +
     ggplot2::theme_bw() +
     ggplot2::labs(x = "(Birth + Death) / 2",

@@ -109,24 +109,10 @@ count_smooth_maximal.pl <- function(x,
 compute_smooth_pl <- function(pl, spar = seq(0, 1, 0.1)) {
   assert_that(inherits(pl, "pl"))
 
-  pl.list <- pl %>%
-    tidyr::gather(key, value, -tseq) %>%
-    split(.$key)
-
-  lapply(pl.list, function(l)
-    purrr::map(spar, ~ stats::smooth.spline(x = l$tseq, y = l$value, spar = .))) %>%
-    tibble::as.tibble() %>%
-    # dplyr::mutate(smooth = map(extract2, 1)) %>%
-    dplyr::bind_cols(spar = spar) %>%
-    tidyr::gather(dim, smooth, -spar)
-
-  # pl %>%
-  #   tidyr::gather(dim, value, -tseq) %>%
-  #   tidyr::nest(-dim, .key = "lands") %>%
-  #   tidyr::crossing(spar = spar) %>%
-  #   tidyr::nest(-dim) %>%
-  #   dplyr::mutate(smooth = purrr::map(data, ~ myfs::debugText(.$lands, .$spar)))
-  # dplyr::mutate(smooth = purrr::map(data, ~ stats::smooth.spline(x = .$lands$tseq,
-  #                                                                y = .$lands$value,
-  #                                                                spar = .$spar)))
+  pl %>%
+    tidyr::crossing(spar = spar) %>%
+    nest(tseq, value, .key = lands) %>%
+    mutate(smooth = pmap(., function(dim, spar, lands)
+      smooth.spline(lands$tseq, lands$value, spar = spar))) %>%
+    select(-lands)
 }
