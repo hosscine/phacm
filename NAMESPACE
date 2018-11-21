@@ -2,6 +2,7 @@
 
 S3method(autoplot,pd)
 S3method(autoplot,pl)
+S3method(autoplot,smooth_pl)
 S3method(count_local_maximal,default)
 S3method(count_local_maximal,pd)
 S3method(count_local_maximal,pl)

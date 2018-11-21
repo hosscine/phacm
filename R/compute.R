@@ -67,6 +67,25 @@ compute_pl <- function(pd) {
     setter::set_attributes(pd = pd %>% as_pd)
 }
 
+#' Smooth persistent landscape using `stats::smooth.spline()`
+#'
+#' @param pl `pl` object.
+#' @param spar smoothing parameters to be passed [stats::smooth.spline()].
+#' @return smoothed persistent landscape as numeric vector.
+#' @seealso [count_smooth_maximal()], [stats::smooth.spline()]
+#' @export
+compute_smooth_pl <- function(pl, spar = seq(0, 1, 0.1)) {
+  assert_that(inherits(pl, "pl"))
+
+  pl %>%
+    tidyr::crossing(spar = spar) %>%
+    tidyr::nest(tseq, value, .key = lands) %>%
+    dplyr::mutate(smooth = purrr::pmap(., function(dim, spar, lands)
+      stats::smooth.spline(lands$tseq, lands$value, spar = spar))) %>%
+    dplyr::select(-lands) %>%
+    setter::set_class(c("smooth_pl", "tbl_df", "tbl", "data.frame"))
+}
+
 #' Title
 #'
 #' @param X

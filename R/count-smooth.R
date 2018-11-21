@@ -98,21 +98,3 @@ count_smooth_maximal.pl <- function(x,
 
   return(result)
 }
-
-#' Smooth persistent landscape using `stats::smooth.spline()`
-#'
-#' @param pl `pl` object.
-#' @param spar smoothing parameters to be passed [stats::smooth.spline()].
-#' @return smoothed persistent landscape as numeric vector.
-#' @seealso [count_smooth_maximal()], [stats::smooth.spline()]
-#' @export
-compute_smooth_pl <- function(pl, spar = seq(0, 1, 0.1)) {
-  assert_that(inherits(pl, "pl"))
-
-  pl %>%
-    tidyr::crossing(spar = spar) %>%
-    nest(tseq, value, .key = lands) %>%
-    mutate(smooth = pmap(., function(dim, spar, lands)
-      smooth.spline(lands$tseq, lands$value, spar = spar))) %>%
-    select(-lands)
-}

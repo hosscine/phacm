@@ -17,3 +17,6 @@
 \description{
 Autoplot persistent diagram
 }
+\seealso{
+\code{\link[=compute_pd]{compute_pd()}}, \code{\link[=plot.pd]{plot.pd()}}
+}

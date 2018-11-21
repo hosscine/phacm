@@ -17,3 +17,6 @@
 \description{
 Autoplot persistent landscape
 }
+\seealso{
+\code{\link[=compute_pl]{compute_pl()}}
+}

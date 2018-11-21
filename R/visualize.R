@@ -87,6 +87,7 @@ print.pl <- function(x, ..., digit = 3) {
 #' @param object `pd` object.
 #' @param ... ignored.
 #' @return `ggplot` object.
+#' @seealso [compute_pd()], [plot.pd()]
 #' @export
 autoplot.pd <- function(object, ...) {
   scale <- attr(object, "scale")
@@ -111,15 +112,35 @@ autoplot.pd <- function(object, ...) {
 #' @param object `pl` object.
 #' @param ... ignored.
 #' @return `ggplot` object.
+#' @seealso [compute_pl()]
 #' @export
 autoplot.pl <- function(object, ...) {
   x %>%
     ggplot2::ggplot(aes(x = tseq, y = value, group = dim, fill = dim)) +
     ggplot2::geom_area(alpha = 0.5) +
-    ggplot2::theme_bw() +
+    ggplot2::theme_gray() +
     ggplot2::labs(x = "(Birth + Death) / 2",
                   y = "(Birth - Death) / 2",
                   fill = "Dimension")
+}
+
+#' Autoplot smoothed persistent landscape
+#'
+#' @param object `smooth_pl` object.
+#' @param dimension target dimension.
+#' @param ... ignored.
+#'
+#' @return `ggplot` object.
+#' @seealso [compute_smooth_pl()]
+#' @export
+autoplot.smooth_pl <- function(object, dimension = 1, ...) {
+  object %>%
+    dplyr::filter(dim %in% dimension) %>%
+    dplyr::mutate(smooth = purrr::map(smooth, ~ tibble::tibble(x = .$x, y = .$y))) %>%
+    dplyr::mutate(spar = as.factor(spar)) %>%
+    tidyr::unnest() %>%
+    ggplot2::ggplot(aes(x, y, group = spar, colour = spar)) +
+    ggplot2::geom_point(size = 0.1)
 }
 
 #' Title
