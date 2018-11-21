@@ -115,7 +115,8 @@ autoplot.pd <- function(object, ...) {
 #' @seealso [compute_pl()]
 #' @export
 autoplot.pl <- function(object, ...) {
-  x %>%
+  object %>%
+    dplyr::mutate(dim = as.factor(dim)) %>%
     ggplot2::ggplot(aes(x = tseq, y = value, group = dim, fill = dim)) +
     ggplot2::geom_area(alpha = 0.5) +
     ggplot2::theme_gray() +
@@ -127,20 +128,31 @@ autoplot.pl <- function(object, ...) {
 #' Autoplot smoothed persistent landscape
 #'
 #' @param object `smooth_pl` object.
-#' @param dimension target dimension.
+#' @param dimension specific dimension. If `NULL`, plot for all dimension.
 #' @param ... ignored.
-#'
 #' @return `ggplot` object.
 #' @seealso [compute_smooth_pl()]
 #' @export
-autoplot.smooth_pl <- function(object, dimension = 1, ...) {
-  object %>%
-    dplyr::filter(dim %in% dimension) %>%
+autoplot.smooth_pl <- function(object, dimension = NULL, ...) {
+  if (is.numeric(dimension)) {
+    p <- object %>%
+      dplyr::filter(dim %in% dimension) %>%
+      dplyr::mutate(smooth = purrr::map(smooth, ~ tibble::tibble(x = .$x, y = .$y))) %>%
+      dplyr::mutate(spar = as.factor(spar)) %>%
+      tidyr::unnest() %>%
+      ggplot2::ggplot(aes(x, y, group = spar, colour = spar)) +
+      ggplot2::geom_point(size = 0.5)
+    return(p)
+  }
+
+  messy <- object %>%
     dplyr::mutate(smooth = purrr::map(smooth, ~ tibble::tibble(x = .$x, y = .$y))) %>%
-    dplyr::mutate(spar = as.factor(spar)) %>%
+    dplyr::mutate(dim = as.factor(dim)) %>%
     tidyr::unnest() %>%
-    ggplot2::ggplot(aes(x, y, group = spar, colour = spar)) +
-    ggplot2::geom_point(size = 0.1)
+    tidyr::spread(spar, y)
+
+  ggplot2::ggplot(messy, aes(x, group = dim, colour = dim)) +
+    purrr::map(messy %>% dplyr::select(-dim, -x), ~ ggplot2::geom_line(aes(y = .)))
 }
 
 #' Title

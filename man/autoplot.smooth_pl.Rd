@@ -4,12 +4,12 @@
 \alias{autoplot.smooth_pl}
 \title{Autoplot smoothed persistent landscape}
 \usage{
-\method{autoplot}{smooth_pl}(object, dimension = 1, ...)
+\method{autoplot}{smooth_pl}(object, dimension = NULL, ...)
 }
 \arguments{
 \item{object}{\code{smooth_pl} object.}
 
-\item{dimension}{target dimension.}
+\item{dimension}{specific dimension. If \code{NULL}, plot for all dimension.}
 
 \item{...}{ignored.}
 }
