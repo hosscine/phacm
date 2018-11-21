@@ -65,11 +65,23 @@ count_smooth_maximal.pl <- function(x,
   assert_that(is.function(exist.method))
   assert_that(is.function(cutoff.method))
 
-  sms.pl <- compute_smooth_pl(x) %>%
-    mutate(d = str_sub(dim, 4) %>% as.integer) %>%
-    nest(-spar, -dim)
   exist.thresh <- exist.method(x)
   cutoff <- . %>% {2 * cutoff.method(x) * nd_area(1) / nd_area(.)}
+
+  sms.pl <- compute_smooth_pl(x)
+  if (plot) {
+    p <- autoplot(sms.pl)
+    cols <- p %>% ggplot2::ggplot_build() %>%
+      use_series(data) %>%
+      extract2(1) %>%
+      use_series(colour) %>%
+      unique %>% rev
+    p <- p + map(
+      x$dim %>% unique,
+      ~ ggplot2::geom_abline(intercept = cutoff(.), slope = 0, colour = cols[.])
+    )
+    print(p)
+  }
 
   exist <- x %>%
     tidyr::gather(dim, value, -tseq) %>%
@@ -77,24 +89,13 @@ count_smooth_maximal.pl <- function(x,
     dplyr::mutate(exist = purrr::map_lgl(lands, ~ .$value %>% max > exist.thresh)) %>%
     magrittr::use_series(exist)
 
-  result <- sms.pl %>%
+  sms.pl %>%
+    dplyr::mutate(d = dim) %>%
+    tidyr::nest(d, smooth) %>%
     dplyr::mutate(count = purrr::map_int(
       data, ~ count_local_maximal(x = .$smooth[[1]], thresh = cutoff(.$d)))) %>%
     dplyr::select(-data) %>%
     tidyr::nest(-dim, .key = detail) %>%
     dplyr::mutate(betti = map_dbl(detail, ~ mean(.$count)) * exist) %>%
-    dplyr::bind_cols(exist = exist)
-
-  if (!plot) return(result)
-
-  # # if plot == true then
-  # elp <- myfs::overwriteEllipsis(..., x = 0, type = "n", xlim = c(0, pl %>% length), ylim = c(0,
-  #                                                                                             pl %>% max))
-  # elp <- myfs::softwriteEllipsis(..., append = elp, xlab = "(Birth + Death) / 2", ylab = "(Death - Birth) / 2")
-  # do.call(graphics::plot, elp)
-  # graphics::abline(thresh, 0, col = 2)
-  # col <- sms.list %>% length %>% grDevices::rainbow()
-  # for (i in 1:length(sms.list)) graphics::lines(sms.list[[i]]$y, col = col[i])
-
-  return(result)
+    dplyr::bind_cols(exist = exist, thresh = cutoff(.$dim))
 }

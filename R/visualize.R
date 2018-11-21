@@ -152,7 +152,8 @@ autoplot.smooth_pl <- function(object, dimension = NULL, ...) {
     tidyr::spread(spar, y)
 
   ggplot2::ggplot(messy, aes(x, group = dim, colour = dim)) +
-    purrr::map(messy %>% dplyr::select(-dim, -x), ~ ggplot2::geom_line(aes(y = .)))
+    purrr::map(messy %>% dplyr::select(-dim, -x), ~ ggplot2::geom_line(aes(y = .))) +
+    ggplot2::geom_abline(intercept = 0, slope = 0)
 }
 
 #' Title
