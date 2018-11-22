@@ -75,7 +75,7 @@ count_smooth_maximal.pl <- function(x,
       use_series(data) %>%
       extract2(1) %>%
       use_series(colour) %>%
-      unique %>% rev
+      unique
     p <- p + map(
       x$dim %>% unique,
       ~ ggplot2::geom_abline(intercept = cutoff(.), slope = 0, colour = cols[.])
@@ -84,18 +84,15 @@ count_smooth_maximal.pl <- function(x,
   }
 
   exist <- x %>%
-    tidyr::gather(dim, value, -tseq) %>%
     tidyr::nest(-dim, .key = lands) %>%
     dplyr::mutate(exist = purrr::map_lgl(lands, ~ .$value %>% max > exist.thresh)) %>%
     magrittr::use_series(exist)
 
   sms.pl %>%
-    dplyr::mutate(d = dim) %>%
-    tidyr::nest(d, smooth) %>%
-    dplyr::mutate(count = purrr::map_int(
-      data, ~ count_local_maximal(x = .$smooth[[1]], thresh = cutoff(.$d)))) %>%
-    dplyr::select(-data) %>%
+    dplyr::mutate(count = purrr::pmap_int(., function(dim, spar, smooth)
+      count_local_maximal(smooth, thresh = cutoff(dim)))) %>%
+    dplyr::select(-smooth) %>%
     tidyr::nest(-dim, .key = detail) %>%
     dplyr::mutate(betti = map_dbl(detail, ~ mean(.$count)) * exist) %>%
-    dplyr::bind_cols(exist = exist, thresh = cutoff(.$dim))
+    dplyr::mutate(exist = exist, thresh = cutoff(dim))
 }
