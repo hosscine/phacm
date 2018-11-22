@@ -16,9 +16,9 @@ zero_threshold <- function(x) {
 #' @rdname zero_threshold
 zero_threshold.pd <- function(x) {
   x %>%
-    filter(dim == 0) %>%
-    mutate(persistence = death - birth) %>%
-    use_series(persistence) %>%
+    dplyr::filter(dim == 0) %>%
+    dplyr::mutate(persistence = death - birth) %>%
+    magrittr::use_series(persistence) %>%
     mean
 }
 
@@ -46,9 +46,9 @@ zero_hat_threshold <- function(x) {
 #' @rdname zero_hat_threshold
 zero_hat_threshold.pd <- function(x) {
   x %>%
-    filter(dim != 0) %>%
-    mutate(persistence = death - birth) %>%
-    use_series(persistence) %>%
+    dplyr::filter(dim != 0) %>%
+    dplyr::mutate(persistence = death - birth) %>%
+    magrittr::use_series(persistence) %>%
     mean
 }
 

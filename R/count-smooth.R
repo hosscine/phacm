@@ -45,7 +45,7 @@ count_smooth_maximal.pd <- function(x,
   assert_that(is.function(exist.method))
   assert_that(is.function(cutoff.method))
 
-  pl <- compute_pl(pd)
+  pl <- compute_pl(x)
   count_smooth_maximal(pl,
                        exist.method = exist.method, cutoff.method = cutoff.method,
                        spar = spar, plot = plot, ...)
@@ -66,17 +66,17 @@ count_smooth_maximal.pl <- function(x,
   assert_that(is.function(cutoff.method))
 
   exist.thresh <- exist.method(x)
-  cutoff <- . %>% {2 * cutoff.method(x) * nd_area(1) / nd_area(.)}
+  cutoff <- . %>% {2 * cutoff.method(x) * nd_surface(1) / nd_surface(.)}
 
   sms.pl <- compute_smooth_pl(x)
   if (plot) {
     p <- autoplot(sms.pl)
     cols <- p %>% ggplot2::ggplot_build() %>%
-      use_series(data) %>%
-      extract2(1) %>%
-      use_series(colour) %>%
+      magrittr::use_series(data) %>%
+      magrittr::extract2(1) %>%
+      magrittr::use_series(colour) %>%
       unique
-    p <- p + map(
+    p <- p + purrr::map(
       x$dim %>% unique,
       ~ ggplot2::geom_abline(intercept = cutoff(.), slope = 0, colour = cols[.])
     )
@@ -93,6 +93,6 @@ count_smooth_maximal.pl <- function(x,
       count_local_maximal(smooth, thresh = cutoff(dim)))) %>%
     dplyr::select(-smooth) %>%
     tidyr::nest(-dim, .key = detail) %>%
-    dplyr::mutate(betti = map_dbl(detail, ~ mean(.$count)) * exist) %>%
+    dplyr::mutate(betti = purrr::map_dbl(detail, ~ mean(.$count)) * exist) %>%
     dplyr::mutate(exist = exist, thresh = cutoff(dim))
 }

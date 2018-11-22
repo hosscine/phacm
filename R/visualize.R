@@ -64,7 +64,7 @@ print.pd <- function(x, ...) {
 #' @export
 print.pl <- function(x, ..., digit = 3) {
   if (!assertthat::has_name(x, "value") || !assertthat::has_name(x, "dim")){
-    print(trunc_mat(x))
+    print(tibble::trunc_mat(x))
     return()
   }
 
@@ -73,12 +73,12 @@ print.pl <- function(x, ..., digit = 3) {
 
   cat("# Persistent Landscape\n")
   for (d in x$dim %>% unique) {
-    val <- x %>% filter(dim == d) %>% use_series(value)
+    val <- x %>% dplyr::filter(dim == d) %>% magrittr::use_series(value)
     cat("\n- Dimension", d, "\n")
     cat("  - cycle:", betti[d], "or less\n")
     cat("  - max  :", max(val) %>% round(digit), "\n")
     cat("  - mean :", mean(val) %>% round(digit), "\n")
-    cat("  - var  :", var(val) %>% round(digit), "\n")
+    cat("  - var  :", stats::var(val) %>% round(digit), "\n")
   }
 }
 
