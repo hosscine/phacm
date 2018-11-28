@@ -18,6 +18,7 @@ zero_threshold.pd <- function(x) {
   x %>%
     dplyr::filter(dim == 0) %>%
     dplyr::mutate(persistence = death - birth) %>%
+    dplyr::filter(persistence != max(attr(x, "scale"))) %>%
     magrittr::use_series(persistence) %>%
     mean
 }
