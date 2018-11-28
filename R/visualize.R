@@ -91,7 +91,7 @@ print.pl <- function(x, ..., digit = 3) {
 #' @export
 autoplot.pd <- function(object, ...) {
   scale <- attr(object, "scale")
-  object$dim %<>% {paste0("dim", .)} %>% as.factor
+  object$dim %<>% as.factor
   diagonal <- list(scale, -scale) %>%
     purrr::map(~ scales::cbreaks(.)$breaks) %>%
     unlist %>% unique

@@ -70,7 +70,10 @@ count_smooth_maximal.pl <- function(x,
 
   sms.pl <- compute_smooth_pl(x)
   if (plot) {
-    p <- autoplot(sms.pl)
+    p <- autoplot(sms.pl) +
+      ggplot2::labs(x = "(Birth + Death) / 2",
+           y = "(Birth - Death) / 2",
+           colour = "Dimension")
     cols <- p %>% ggplot2::ggplot_build() %>%
       magrittr::use_series(data) %>%
       magrittr::extract2(1) %>%
