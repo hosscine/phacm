@@ -2,12 +2,12 @@
 % Please edit documentation in R/store.R
 \name{set_last_pd}
 \alias{set_last_pd}
-\title{Set the last persistent diagram to be fetched by lastPD()}
+\title{Set the last persistent diagram to be fetched by \code{last_pd()}}
 \usage{
 set_last_pd(value)
 }
 \description{
-Set the last persistent diagram to be fetched by lastPD()
+Set the last persistent diagram to be fetched by \code{last_pd()}
 }
 \seealso{
 \code{\link[=last_pd]{last_pd()}}

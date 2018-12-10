@@ -4,7 +4,7 @@
 \alias{compute_pd}
 \title{Compute persistent diagram from point cloud.}
 \usage{
-compute_pd(X, maxdimension, maxscale, plot = TRUE)
+compute_pd(X, maxdimension, maxscale)
 }
 \arguments{
 \item{X}{target data.}
@@ -15,8 +15,6 @@ In case of computing on the general computer,
 `maxdimension = 1`` is recomended firstly to avoid freeze your computer.}
 
 \item{maxscale}{max scale to compute.}
-
-\item{plot}{if \code{TRUE}, plot diagram.}
 }
 \value{
 persistent diagram.
@@ -27,11 +25,10 @@ Then keeps diagram to avoid to recomputing.
 The keeped diagram can be took out by \code{\link[=last_pd]{last_pd()}}.
 }
 \examples{
-library(TDA)
+anulus <- anulusUnif(200)
+anulus.pd <- compute_pd(anulus, maxdimension = 1, maxscale = 1)
 
-circle <- circleUnif(100)
-circle.diag <- compute_pd(circle, maxdimension = 1, maxscale = 1)
-# you can see plotted persistent diagram.
+autoplot(anulus.pd)
 }
 \seealso{
 \code{\link[TDA:ripsDiag]{TDA::ripsDiag()}}, \code{\link[=last_pd]{last_pd()}}, \code{\link[=plot.pd]{plot.pd()}}, \code{\link[=autoplot.pd]{autoplot.pd()}}

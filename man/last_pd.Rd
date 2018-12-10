@@ -10,6 +10,6 @@ last_pd()
 Retrieve the last persistent diagram to be computed.
 }
 \seealso{
-\code{\link[=compute_pd]{compute_pd()}}
+\code{\link[=compute_pd]{compute_pd()}}, \code{\link[=compute_dist_pd]{compute_dist_pd()}}
 }
 \keyword{internal}

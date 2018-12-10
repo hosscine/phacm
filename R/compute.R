@@ -10,20 +10,36 @@
 #'   In case of computing on the general computer,
 #'   `maxdimension = 1`` is recomended firstly to avoid freeze your computer.
 #' @param maxscale max scale to compute.
-#' @param plot if `TRUE`, plot diagram.
-#'
 #' @return persistent diagram.
 #' @family persistent homology computation
 #' @seealso [TDA::ripsDiag()], [last_pd()], [plot.pd()], [autoplot.pd()]
 #' @export
 #' @examples
-#' library(TDA)
+#' anulus <- anulusUnif(200)
+#' anulus.pd <- compute_pd(anulus, maxdimension = 1, maxscale = 1)
 #'
-#' circle <- circleUnif(100)
-#' circle.diag <- compute_pd(circle, maxdimension = 1, maxscale = 1)
-#' # you can see plotted persistent diagram.
-compute_pd <- function(X, maxdimension, maxscale, plot = TRUE) {
+#' autoplot(anulus.pd)
+compute_pd <- function(X, maxdimension, maxscale) {
   pd <- TDA::ripsDiag(X, maxdimension = maxdimension, maxscale = maxscale) %>% as_pd
+  set_last_pd(pd)
+  return(pd)
+}
+
+#' Compute persistent diagram from distance.
+#'
+#' @param X dist object or distance matrix.
+#' @inheritParams compute_pd
+#' @export
+#' @examples
+#' anulus <- anulusUnif(200)
+#' anulus.dist <- dist(anulus)
+#' anulus.pd <- compute_pd(anulus.dist, maxdimension = 1, maxscale = 1)
+#'
+#' autoplot(anulus.pd)
+compute_dist_pd <- function(X, maxdimension, maxscale) {
+  X <- as.matrix(X)
+  pd <- TDA::ripsDiag(X, maxdimension = maxdimension, maxscale = maxscale,
+                      dist = "arbitrary", library = "Dionysus") %>% as_pd
   set_last_pd(pd)
   return(pd)
 }
