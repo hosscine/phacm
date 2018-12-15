@@ -114,15 +114,22 @@ autoplot.pd <- function(object, ...) {
 #' @return `ggplot` object.
 #' @seealso [compute_pl()]
 #' @export
-autoplot.pl <- function(object, ...) {
+autoplot.pl <- function(object, size = 1, ...) {
+  object %<>% dplyr::mutate(dim = as.factor(dim))
+
+  maximal <- object %>%
+    dplyr::mutate(maximal = value %>% diff %>% sign %>%
+                    diff %>% magrittr::equals(-2) %>% c(0, ., 0)) %>%
+    dplyr::filter(maximal == TRUE)
+
   object %>%
-    dplyr::mutate(dim = as.factor(dim)) %>%
-    ggplot2::ggplot(aes(x = tseq, y = value, group = dim, fill = dim)) +
-    ggplot2::geom_area(alpha = 0.5) +
-    ggplot2::theme_gray() +
+    ggplot2::ggplot(aes(x = tseq, y = value, group = dim, colour = dim)) +
+    ggplot2::geom_line(size = size) +
     ggplot2::labs(x = "(Birth + Death) / 2",
                   y = "(Birth - Death) / 2",
-                  fill = "Dimension")
+                  colour = "Dimension") +
+    ggplot2::geom_segment(aes(x = tseq, y = 0, xend = tseq, yend = value),
+                          data = maximal)
 }
 
 #' Autoplot smoothed persistent landscape
