@@ -4,7 +4,7 @@
 \alias{autoplot.pl}
 \title{Autoplot persistent landscape}
 \usage{
-\method{autoplot}{pl}(object, ...)
+\method{autoplot}{pl}(object, size = 1, ...)
 }
 \arguments{
 \item{object}{\code{pl} object.}

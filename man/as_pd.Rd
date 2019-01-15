@@ -16,5 +16,5 @@ as_pd(x)
 Convert \code{TDA::diagram} to \code{pd}
 }
 \seealso{
-\code{\link[=is_pd]{is_pd()}}, \code{\link[=tidy_pd]{tidy_pd()}}
+\code{\link[=is_pd]{is_pd()}}
 }

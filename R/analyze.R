@@ -11,25 +11,23 @@
 upperCycles <- function(band, diag = diagram, ignore.0 = F) {
   diag <- rawPD(diag)
   pdiag <- calcPersistence(diag)
-  if (ignore.0) 
+  if (ignore.0)
     pdiag <- pdiag[pdiag[, "dimension"] != 0, ]
   upperdiag <- pdiag[pdiag[, "Persistence"] >= band, ]
   uppercycle <- upperdiag[order(upperdiag[, "Persistence"], decreasing = T), ]
-  if (nrow(uppercycle) == 0) 
+  if (nrow(uppercycle) == 0)
     warning("there is no upper cycle") else return(uppercycle)
 }
 
-#' Title
+#' Compute persistence of pd.
 #'
-#' @param diag
+#' @param pd persistent diagram.
 #'
-#' @return
+#' @return `pd` object with persistence.
 #' @export
 #'
-#' @examples
-calcPersistence <- function(diag = diagram) {
-  diag <- rawPD(diag)
-  diag. <- cbind(diag, diag[, "Death"] - diag[, "Birth"])
-  colnames(diag.) <- c(colnames(diag), "Persistence")
-  return(diag.)
+persistence <- function(pd) {
+  pd %>%
+    dplyr::mutate(persistence = death - birth) %>%
+    inherit_pd(pd)
 }

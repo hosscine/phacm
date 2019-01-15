@@ -10,7 +10,9 @@
 extract_diagram <- function(x) {
   if ("list" %in% class(x))
     return(x$diagram)
-  else if (c("pd", "diagram") %in% class(x) %>% any %>% magrittr::not())
+  else if (c("pd", "diagram", "tbl_df") %in% class(x) %>%
+           any %>%
+           magrittr::not())
     stop("the object dons not contain diagram")
   else
     return(x)
@@ -21,10 +23,18 @@ extract_diagram <- function(x) {
 #' @param x `diagram` object computed by `TDA` package.
 #' @return `pd` object.
 #' @export
-#' @seealso [is_pd()], [tidy_pd()]
+#' @seealso [is_pd()]
 as_pd <- function(x) {
   if (is_pd(x)) return(x)
-  x %<>% extract_diagram %>% tidy_pd
+
+  x %<>% extract_diagram
+  if ("diagram" %in% class(x))
+    x <- tibble::tibble(dim = x[, "dimension"] %>% as.integer,
+                        birth = x[, "Birth"],
+                        death = x[, "Death"])
+
+  x %<>% setter::copy_attributes(x, c("maxdimension", "scale")) %>%
+    setter::set_class(c("pd", "tbl_df", "tbl", "data.frame"))
   return(x)
 }
 
@@ -35,6 +45,19 @@ as_pd <- function(x) {
 #' @seealso [as_pd()]
 #' @export
 is_pd <- function(x) inherits(x, "pd") & is.recursive(x)
+
+#' Inherit attributes from `pd` object
+#'
+#' @param pd inherits target `pd`.
+#' @param from inherits from.
+#'
+#' @return `pd` object with attributes of `from`.
+#' @export
+#'
+inherit_pd <- function(pd, from) {
+  pd %>% setter::copy_attributes(from, c("maxdimension", "scale")) %>%
+    setter::set_class(c("pd", "tbl_df", "tbl", "data.frame"))
+}
 
 #' Convert `pd` to `TDA::diagram`
 #'
@@ -62,19 +85,4 @@ finite_pd <- function(pd, replace = attr(pd, "scale")[2]) {
   assert_that(is_pd(pd))
   pd[pd == Inf] <- replace
   return(pd)
-}
-
-#' Convert the `diagram` object to `pd` object that inherits `tibble`
-#'
-#' @param x `diagram` object.
-#' @return `pd` object.
-#' @export
-#' @seealso [tibble::tibble]
-tidy_pd <- function(x) {
-  x %<>% extract_diagram
-  tibble::tibble(dim = x[, "dimension"] %>% as.integer,
-                 birth = x[, "Birth"],
-                 death = x[, "Death"]) %>%
-    setter::copy_attributes(x, c("maxdimension", "scale")) %>%
-    setter::set_class(c("pd", "tbl_df", "tbl", "data.frame"))
 }
