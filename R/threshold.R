@@ -33,30 +33,31 @@ zero_threshold.pl <- function(x) {
 #'
 #' The 0-dimensional persistence is one of the indicators
 #' for the connectedness of data.
-#' We can use the value for thresholding non 0-dimensional persistence
+#' We can use double of the value for thresholding non 0-dimensional persistence
 #' to judge whether the cycle is exist or not on each dimension.
 #'
 #' @param x `pd` or `pl` object.
 #' @return mean of 0-dimensional persistence.
 #' @export
-zero_hat_threshold <- function(x) {
-  UseMethod("zero_hat_threshold")
+zero_hat_double_threshold <- function(x) {
+  UseMethod("zero_hat_double_threshold")
 }
 
 #' @export
-#' @rdname zero_hat_threshold
-zero_hat_threshold.pd <- function(x) {
+#' @rdname zero_hat_double_threshold
+zero_hat_double_threshold.pd <- function(x) {
   x %>%
     dplyr::filter(dim != 0) %>%
     dplyr::mutate(persistence = death - birth) %>%
     magrittr::use_series(persistence) %>%
+    magrittr::multiply_by(2) %>%
     mean
 }
 
 #' @export
-#' @rdname zero_hat_threshold
-zero_hat_threshold.pl <- function(x) {
-  attr(x, "pd") %>% zero_hat_threshold
+#' @rdname zero_hat_double_threshold
+zero_hat_double_threshold.pl <- function(x) {
+  attr(x, "pd") %>% zero_hat_double_threshold
 }
 
 #' Calculate area of the n-dimensional hypersphere

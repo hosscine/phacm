@@ -68,7 +68,7 @@ print.pl <- function(x, ..., digit = 3) {
     return()
   }
 
-  thresh <- x %>% zero_hat_threshold %>% magrittr::divide_by(4)
+  thresh <- x %>% zero_hat_double_threshold %>% magrittr::divide_by(8)
   betti <- x %>% count_local_maximal(thresh)
 
   cat("# Persistent Landscape\n")

@@ -13,7 +13,7 @@ count_smooth_maximal(x, ...)
   plot = TRUE, ...)
 
 \method{count_smooth_maximal}{pl}(x, exist.method = zero_threshold,
-  cutoff.method = zero_hat_threshold, spar = seq(0, 1, 0.1),
+  cutoff.method = zero_hat_double_threshold, spar = seq(0, 1, 0.1),
   plot = TRUE, ...)
 }
 \arguments{

@@ -59,14 +59,14 @@ count_smooth_maximal.pd <- function(x,
 #' @rdname count_smooth_maximal
 count_smooth_maximal.pl <- function(x,
                                     exist.method = zero_threshold,
-                                    cutoff.method = zero_hat_threshold,
+                                    cutoff.method = zero_hat_double_threshold,
                                     spar = seq(0, 1, 0.1),
                                     plot = TRUE, ...) {
   assert_that(is.function(exist.method))
   assert_that(is.function(cutoff.method))
 
   exist.thresh <- exist.method(x)
-  cutoff <- . %>% {2 * cutoff.method(x) * nd_surface(1) / nd_surface(.)}
+  cutoff <- . %>% {cutoff.method(x) * nd_surface(1) / nd_surface(.)}
 
   sms.pl <- compute_smooth_pl(x)
   if (plot) {
