@@ -182,3 +182,21 @@ showPhomBand <- function(diag = diagram, band) {
   graphics::par(new = T)
   showPersistentDiagram(diag)
 }
+
+#' Plot persistence histgram
+#'
+#' The histgram of persistence is usefull for checking effect of threshold.
+#'
+#' @param pd persistent diagram.
+#'
+#' @return `ggplot` object.
+#' @export
+#'
+persistence_hist <- function(pd) {
+  pd %<>% persistence()
+  w <- mean(pd$persistence) / 4
+  pd %>%
+    ggplot2::ggplot(aes(persistence)) +
+    ggplot2::geom_histogram(binwidth = w, alpha = 0.5) +
+    ggplot2::geom_density(aes(y = w * ..count..))
+}
