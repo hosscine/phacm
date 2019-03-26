@@ -1,7 +1,7 @@
 Package: phacm
 Type: Package
 Title: The R Package for Analyzing Persistent Homology and Cycles of Manifold
-Version: 0.3.1.9000
+Version: 0.3.2.9000
 Authors@R: person("Rentaro", "Futagami", ,"futagamirentaro@gmail.com",c("aut","cre"))
 Description: The persistent homology is effective approach to analyze a manifold of data.
     The information of a manifold realizes powerful dimensionality reduction, interpolation, regression and feature extraction.
