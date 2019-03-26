@@ -101,22 +101,3 @@ compute_smooth_pl <- function(pl, spar = seq(0, 1, 0.1)) {
     dplyr::select(-lands) %>%
     setter::set_class(c("smooth_pl", "tbl_df", "tbl", "data.frame"))
 }
-
-#' Title
-#'
-#' @param X
-#' @param maxdimension
-#' @param maxscale
-#' @param rate
-#' @param plot
-#' @param ret
-#'
-#' @return
-#' @export
-#'
-#' @examples
-calcSubsamplePhom <- function(X, maxdimension, maxscale, rate = 0.5, plot = T, ret = F) {
-  assertthat::assert_that(assertthat::is.number(rate) && rate <= 1 && rate >= 0)
-  subX <- X[sample(nrow(X), nrow(X) * rate), ]
-  calcPhom(subX, maxdimension, maxscale, plot, ret)
-}
