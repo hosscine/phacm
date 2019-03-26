@@ -13,17 +13,17 @@
 plot.pd <- function(x, scale = attr(x, "scale"), size = 1.5, legend.size = 1.5, ...) {
   pd <- finite_pd(x)
   maxdimention <- attr(pd, "maxdimension") + 1
-  assert_that(myfs::is.range(scale))
+  assert_that(length(scale) == 2)
 
-  elp <- myfs::overwriteEllipsis(...,
-                                 x = pd$birth, y = pd$death,
-                                 col = pd$dim + 1,
-                                 pch = pd$dim + 1)
-  elp <- myfs::softwriteEllipsis(..., append = elp,
-                                 xlab = "Birth", ylab = "Death",
-                                 xlim = scale, ylim = scale,
-                                 cex = size, cex.axis = size,
-                                 cex.lab = size, cex.main = size)
+  elp <- elp::overwrite_elp(...,
+                            x = pd$birth, y = pd$death,
+                            col = pd$dim + 1,
+                            pch = pd$dim + 1)
+  elp <- elp::softwrite_elp(..., append = elp,
+                            xlab = "Birth", ylab = "Death",
+                            xlim = scale, ylim = scale,
+                            cex = size, cex.axis = size,
+                            cex.lab = size, cex.main = size)
   do.call(graphics::plot, elp)
   graphics::abline(0, 1)
 
