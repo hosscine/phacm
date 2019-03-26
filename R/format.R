@@ -13,7 +13,7 @@ extract_diagram <- function(x) {
   else if (c("pd", "diagram", "tbl_df") %in% class(x) %>%
            any %>%
            magrittr::not())
-    stop("the object dons not contain diagram")
+    stop("this object x does not contain a diagram")
   else
     return(x)
 }
@@ -25,17 +25,17 @@ extract_diagram <- function(x) {
 #' @export
 #' @seealso [is_pd()]
 as_pd <- function(x) {
-  if (is_pd(x)) return(x)
+  if (phacm::is_pd(x)) return(x)
 
-  x %<>% extract_diagram
-  if ("diagram" %in% class(x))
-    x <- tibble::tibble(dim = x[, "dimension"] %>% as.integer,
-                        birth = x[, "Birth"],
-                        death = x[, "Death"])
+  ext_x <- x %>% phacm::extract_diagram()
+  if ("diagram" %in% class(ext_x))
+    new_x <- tibble::tibble(dim = ext_x[, "dimension"] %>% as.integer,
+                            birth = ext_x[, "Birth"],
+                            death = ext_x[, "Death"])
 
-  x %<>% setter::copy_attributes(x, c("maxdimension", "scale")) %>%
+  new_x %<>% setter::copy_attributes(ext_x, c("maxdimension", "scale")) %>%
     setter::set_class(c("pd", "tbl_df", "tbl", "data.frame"))
-  return(x)
+  return(new_x)
 }
 
 #' Test if the object is a `pd`
